@@ -1,0 +1,54 @@
+name: Yacht Engineer Job Monitor
+
+on:
+  schedule:
+    # 8:00 AM UTC = 5:00 AM Uruguay (UTC-3)
+    - cron: "0 8 * * *"
+    # 17:00 UTC = 14:00 Uruguay (UTC-3)
+    - cron: "0 17 * * *"
+  
+  # Permite ejecutarlo manualmente desde GitHub para testear
+  workflow_dispatch:
+
+jobs:
+  scrape-and-notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      # ── Restaurar caché de jobs ya vistos ──────────────────────────────────
+      - name: Restore seen jobs cache
+        uses: actions/cache@v4
+        with:
+          path: seen_jobs.json
+          key: seen-jobs-${{ github.run_id }}
+          restore-keys: |
+            seen-jobs-
+
+      # ── Python setup ───────────────────────────────────────────────────────
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4 lxml
+
+      # ── Run scraper ────────────────────────────────────────────────────────
+      - name: Run job scraper
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+          EMAIL_TO:   ${{ secrets.EMAIL_TO }}
+        run: python scripts/scraper.py
+
+      # ── Guardar seen_jobs.json actualizado ────────────────────────────────
+      - name: Save updated seen jobs
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: seen_jobs.json
+          key: seen-jobs-${{ github.run_id }}
