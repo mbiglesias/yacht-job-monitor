@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
 Yacht Engineer Job Monitor
-Scrapes public job listings from yachting platforms and sends email digest.
+Filtros: Engineer/ETO | Rotación | Inicio ~2 meses | Salario ≥6.000€
 
-Filtros activos:
-  ✓ Rol de ingeniería / técnico
-  ✓ Rotación (rotation, rotational, on/off, schedule)
-  ✓ Disponibilidad: ahora o hasta ~2 meses
-  ✓ Salario ≥ 6.000 EUR/mes (cuando está explícito en el anuncio)
+Fuentes (9 total):
+  Originales: Yotspot, Crew Network, Bluewater Yachting, Find a Crew, YaCrew
+  Nuevas:     Saltwater Recruitment, Crewin, Faststream, YPI Crew
+  LinkedIn:   vía RSS feed (rss.app) — ver instrucciones abajo
 """
 
 import os
@@ -17,6 +16,7 @@ import hashlib
 import smtplib
 import datetime
 import requests
+import xml.etree.ElementTree as ET
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from bs4 import BeautifulSoup
@@ -27,7 +27,14 @@ GMAIL_USER = os.environ["GMAIL_USER"]
 GMAIL_PASS = os.environ["GMAIL_PASS"]
 EMAIL_TO   = os.environ["EMAIL_TO"]
 
-# ── Rol ────────────────────────────────────────────────────────────────────────
+# LinkedIn RSS: generá tu feed en https://rss.app y pegá la URL aquí.
+# Dejalo vacío ("") para desactivar LinkedIn.
+# Instrucciones: rss.app → New Feed → pegá esta URL de LinkedIn:
+#   https://www.linkedin.com/jobs/search/?keywords=yacht+engineer&f_TPR=r86400
+LINKEDIN_RSS_URL = os.environ.get("LINKEDIN_RSS_URL", "")
+
+# ─── KEYWORDS ──────────────────────────────────────────────────────────────────
+
 ENGINEER_KEYWORDS = [
     "engineer", "chief engineer", "1st engineer", "second engineer",
     "sole engineer", "eto", "electro-technical", "electrotechnical",
@@ -40,14 +47,19 @@ EXCLUDE_ROLE_KEYWORDS = [
     "head chef", "sous chef",
 ]
 
-# ── Rotación ───────────────────────────────────────────────────────────────────
 ROTATION_KEYWORDS = [
     "rotation", "rotational", "on/off", "on / off", "schedule",
     "2 on 2 off", "2:2", "2/2", "3 on 3 off", "3:3", "3/3",
     "4 on 4 off", "4:4", "4/4", "1 on 1 off", "rotary", "roster",
 ]
+EXCLUDE_ROTATION_KEYWORDS = [
+    "non-rotational", "non rotational", "nonrotational",
+    "permanent contract", "permanent position", "permanent role",
+    "full time permanent", "live aboard", "live-aboard", "liveaboard",
+    "no rotation", "not rotational", "without rotation",
+    "perm contract", "perm position",
+]
 
-# ── Disponibilidad ─────────────────────────────────────────────────────────────
 def _availability_months():
     months_en = ["january","february","march","april","may","june",
                  "july","august","september","october","november","december"]
@@ -67,11 +79,9 @@ AVAILABILITY_KEYWORDS = [
     "join immediately", "start immediately",
 ] + _availability_months()
 
-# ── Salario mínimo ─────────────────────────────────────────────────────────────
 SALARY_MIN_EUR = 6000
 
 def _parse_salary_eur(text: str):
-    """Devuelve el salario mensual en EUR más alto encontrado, o None."""
     text = text.replace(",", "")
     patterns = [
         (r"(?:€|eur)\s*(\d{4,6})", "eur"),
@@ -93,7 +103,6 @@ def _parse_salary_eur(text: str):
                 val = val // 12
             found.append(val)
     return max(found) if found else None
-
 
 # ─── HELPERS ───────────────────────────────────────────────────────────────────
 SEEN_FILE = Path("seen_jobs.json")
@@ -123,7 +132,6 @@ def get(url, timeout=15):
         print(f"  ⚠ Error fetching {url}: {e}")
         return ""
 
-
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
 
 def score_job(title: str, description: str = "") -> dict:
@@ -137,14 +145,16 @@ def score_job(title: str, description: str = "") -> dict:
     tags     = ["⚙️ Engineer"]
     warnings = []
 
-    has_rotation = any(kw in text for kw in ROTATION_KEYWORDS)
-    if has_rotation:
+    # Descarte duro: NO-rotación explícita
+    if any(kw in text for kw in EXCLUDE_ROTATION_KEYWORDS):
+        return {"passes": False}
+
+    if any(kw in text for kw in ROTATION_KEYWORDS):
         tags.append("🔄 Rotation")
     else:
         warnings.append("⚠️ Rotación no mencionada")
 
-    has_availability = any(kw in text for kw in AVAILABILITY_KEYWORDS)
-    if has_availability:
+    if any(kw in text for kw in AVAILABILITY_KEYWORDS):
         tags.append("📅 Inicio ~2 meses")
     else:
         warnings.append("⚠️ Fecha de inicio no especificada")
@@ -154,14 +164,13 @@ def score_job(title: str, description: str = "") -> dict:
         if salary >= SALARY_MIN_EUR:
             tags.append(f"💶 ~{salary:,}€/mes")
         else:
-            return {"passes": False}   # salario explícito pero bajo → descartar
+            return {"passes": False}
     else:
         warnings.append("⚠️ Salario no especificado")
 
     return {"passes": True, "tags": tags, "warnings": warnings, "salary": salary}
 
-
-# ─── SCRAPERS ──────────────────────────────────────────────────────────────────
+# ─── HELPER GENÉRICO DE EXTRACCIÓN ─────────────────────────────────────────────
 
 def _extract_jobs(soup, base_url, source, href_filters, title_min=8):
     jobs = []
@@ -180,22 +189,21 @@ def _extract_jobs(soup, base_url, source, href_filters, title_min=8):
                              "tags": result["tags"], "warnings": result["warnings"]})
     return jobs[:15]
 
+# ─── SCRAPERS ORIGINALES ────────────────────────────────────────────────────────
 
 def scrape_yotspot():
     html  = get("https://www.yotspot.com/jobs/?department=engineer&page=1")
     soup  = BeautifulSoup(html, "html.parser") if html else None
-    if not soup:
-        return []
+    if not soup: return []
     cards = soup.select("div.job-listing, article.job-card, div.listing-item, li.job")
     if not cards:
         cards = [a.parent for a in soup.select("a[href*='/job/']")]
     jobs = []
     for card in cards[:25]:
         a = card.find("a", href=True)
-        if not a:
-            continue
-        title  = a.get_text(strip=True) or card.get_text(strip=True)[:100]
-        href   = a["href"]
+        if not a: continue
+        title = a.get_text(strip=True) or card.get_text(strip=True)[:100]
+        href  = a["href"]
         if not href.startswith("http"):
             href = "https://www.yotspot.com" + href
         result = score_job(title, card.get_text(" ", strip=True))
@@ -204,42 +212,154 @@ def scrape_yotspot():
                          "tags": result["tags"], "warnings": result["warnings"]})
     return jobs
 
-
 def scrape_crewnetwork():
     html = get("https://www.crewnetwork.com/looking-for-a-job/")
     soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup:
-        return []
+    if not soup: return []
     return _extract_jobs(soup, "https://www.crewnetwork.com",
                          "Crew Network", ["/job/", "vacancy", "position"])
-
 
 def scrape_bluewateryachting():
     html = get("https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs")
     soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup:
-        return []
+    if not soup: return []
     return _extract_jobs(soup, "https://www.bluewateryachting.com",
                          "Bluewater Yachting", ["job", "position", "vacancy", "crew"])
-
 
 def scrape_findacrew():
     html = get("https://www.findacrew.com/search/jobs?keywords=engineer&type=position")
     soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup:
-        return []
+    if not soup: return []
     return _extract_jobs(soup, "https://www.findacrew.com",
                          "Find a Crew", ["/job/", "/position/", "/crew/"])
-
 
 def scrape_yacrew():
     html = get("https://www.yacrew.com/jobs?department=engineer")
     soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup:
-        return []
-    return _extract_jobs(soup, "https://www.yacrew.com",
-                         "YaCrew", ["/job"])
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.yacrew.com", "YaCrew", ["/job"])
 
+# ─── SCRAPERS NUEVOS ────────────────────────────────────────────────────────────
+
+def scrape_saltwater():
+    """Saltwater Recruitment — agencia UK especializada en superyates 60m+"""
+    html = get("https://www.saltwaterrecruitment.com/jobs/?category=engineering")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    jobs = []
+    # Intentar cards de trabajo primero
+    cards = soup.select("article, div.job, li.job-listing, div.vacancy")
+    if cards:
+        for card in cards[:20]:
+            a = card.find("a", href=True)
+            if not a: continue
+            title = a.get_text(strip=True)
+            href  = a["href"]
+            if not href.startswith("http"):
+                href = "https://www.saltwaterrecruitment.com" + href
+            result = score_job(title, card.get_text(" ", strip=True))
+            if result["passes"]:
+                jobs.append({"title": title, "url": href, "source": "Saltwater Recruitment",
+                             "tags": result["tags"], "warnings": result["warnings"]})
+    else:
+        # Fallback genérico
+        jobs = _extract_jobs(soup, "https://www.saltwaterrecruitment.com",
+                             "Saltwater Recruitment", ["job", "vacanc", "position", "role"])
+    return jobs
+
+def scrape_crewin():
+    """Crewin.com — board global moderno de tripulación de yates"""
+    html = get("https://www.crewin.com/jobs?role=engineer")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    jobs = _extract_jobs(soup, "https://www.crewin.com",
+                         "Crewin", ["job", "/position", "/role", "/vacancy"])
+    if not jobs:
+        # Algunos resultados de Crewin usan rutas con IDs numéricos
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            text = a.get_text(strip=True)
+            if re.search(r"/jobs?/\d+", href) and text and len(text) > 8:
+                if not href.startswith("http"):
+                    href = "https://www.crewin.com" + href
+                result = score_job(text, a.parent.get_text(" ", strip=True) if a.parent else "")
+                if result["passes"]:
+                    jobs.append({"title": text, "url": href, "source": "Crewin",
+                                 "tags": result["tags"], "warnings": result["warnings"]})
+    return jobs[:15]
+
+def scrape_faststream():
+    """Faststream — agencia con portal dedicado de superyacht engineer jobs"""
+    html = get("https://www.faststream.com/jobs/superyacht-jobs/?department=engineering")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.faststream.com",
+                         "Faststream", ["job", "vacanc", "position", "role"])
+
+def scrape_ypicrew():
+    """YPI Crew — agencia grande, yates 30m+, página específica de engineer jobs"""
+    html = get("https://www.ypicrew.com/find-a-job/?department=engineering")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.ypicrew.com",
+                         "YPI Crew", ["job", "vacanc", "position"])
+
+# ─── LINKEDIN VÍA RSS ──────────────────────────────────────────────────────────
+
+def scrape_linkedin_rss():
+    """
+    Lee el feed RSS de LinkedIn Jobs generado por rss.app.
+    Para activar:
+      1. Ir a https://rss.app → New Feed
+      2. Pegar: https://www.linkedin.com/jobs/search/?keywords=yacht+engineer&f_TPR=r86400
+      3. Copiar la URL del feed generado
+      4. En GitHub → Settings → Secrets → agregar:
+         LINKEDIN_RSS_URL = https://rss.app/feeds/XXXXXXXXXXXXXXXX.xml
+    """
+    if not LINKEDIN_RSS_URL:
+        return []
+
+    xml_text = get(LINKEDIN_RSS_URL)
+    if not xml_text:
+        return []
+
+    jobs = []
+    try:
+        root = ET.fromstring(xml_text)
+        # RSS 2.0 estándar
+        ns   = {"atom": "http://www.w3.org/2005/Atom"}
+        items = root.findall(".//item") or root.findall(".//atom:entry", ns)
+
+        for item in items[:30]:
+            # Título
+            title_el = item.find("title")
+            title    = title_el.text.strip() if title_el is not None and title_el.text else ""
+            if not title or len(title) < 8:
+                continue
+
+            # URL
+            link_el = item.find("link")
+            href    = link_el.text.strip() if link_el is not None and link_el.text else ""
+            if not href:
+                href_el = item.find("{http://www.w3.org/2005/Atom}link")
+                href    = href_el.get("href", "") if href_el is not None else ""
+            if not href:
+                continue
+
+            # Descripción
+            desc_el = item.find("description") or item.find("{http://www.w3.org/2005/Atom}summary")
+            desc    = desc_el.text or "" if desc_el is not None else ""
+            # Limpiar HTML del snippet de LinkedIn
+            desc    = BeautifulSoup(desc, "html.parser").get_text(" ", strip=True)
+
+            result = score_job(title, desc)
+            if result["passes"]:
+                jobs.append({"title": title, "url": href, "source": "LinkedIn",
+                             "tags": result["tags"], "warnings": result["warnings"]})
+    except ET.ParseError as e:
+        print(f"  ⚠ Error parseando RSS de LinkedIn: {e}")
+
+    return jobs[:15]
 
 # ─── EMAIL ─────────────────────────────────────────────────────────────────────
 
@@ -300,28 +420,27 @@ def build_email(new_jobs):
         <div style="font-size:40px;margin-bottom:12px;">📭</div>
         <p style="margin:0;font-size:15px;font-weight:600;">Sin nuevas ofertas que cumplan todos los criterios.</p>
         <p style="margin:8px 0 0;font-size:13px;color:#a0aec0;">
-          Algunos anuncios pueden no especificar rotación o salario.<br>
-          Vale la pena revisar los sitios directamente de vez en cuando.
+          Algunos anuncios no especifican rotación o salario — vale la pena revisar los sitios directamente de vez en cuando.
         </p>
       </div>"""
+
+    li_note = ' &nbsp;·&nbsp; <a href="https://www.linkedin.com/jobs/search/?keywords=yacht+engineer" style="color:#0f3460;">LinkedIn</a>' if LINKEDIN_RSS_URL else ""
 
     criteria = """
       <div style="margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;
                   font-size:11px;color:#718096;line-height:2;">
         <strong>Filtros activos:</strong><br>
-        ⚙️ Rol: Ingeniero / ETO / Técnico &nbsp;·&nbsp;
-        🔄 Con rotación &nbsp;·&nbsp;
-        📅 Inicio: ahora – ~2 meses &nbsp;·&nbsp;
+        ⚙️ Engineer / ETO &nbsp;·&nbsp;
+        🔄 Con rotación (descarta "permanent / non-rotational") &nbsp;·&nbsp;
+        📅 Inicio ~2 meses &nbsp;·&nbsp;
         💶 Salario ≥ 6.000 €/mes <span style="color:#a0aec0;">(si está especificado)</span>
       </div>"""
 
     return f"""<!DOCTYPE html>
 <html><head><meta charset="utf-8"></head>
-<body style="margin:0;padding:0;background:#f0f4f8;
-             font-family:'Helvetica Neue',Arial,sans-serif;">
-  <div style="max-width:660px;margin:32px auto;background:white;
-              border-radius:12px;overflow:hidden;
-              box-shadow:0 4px 24px rgba(0,0,0,.08);">
+<body style="margin:0;padding:0;background:#f0f4f8;font-family:'Helvetica Neue',Arial,sans-serif;">
+  <div style="max-width:660px;margin:32px auto;background:white;border-radius:12px;
+              overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.08);">
 
     <div style="background:#0f3460;padding:24px 30px;">
       <div style="display:flex;align-items:center;gap:14px;">
@@ -342,10 +461,14 @@ def build_email(new_jobs):
       <p style="margin:0;font-size:12px;color:#718096;">
         Fuentes:
         <a href="https://www.yotspot.com/jobs/?department=engineer" style="color:#0f3460;">Yotspot</a> ·
-        <a href="https://www.crewnetwork.com/looking-for-a-job/" style="color:#0f3460;">Crew Network</a> ·
-        <a href="https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs" style="color:#0f3460;">Bluewater</a> ·
+        <a href="https://www.crewnetwork.com" style="color:#0f3460;">Crew Network</a> ·
+        <a href="https://www.bluewateryachting.com" style="color:#0f3460;">Bluewater</a> ·
         <a href="https://www.findacrew.com" style="color:#0f3460;">Find a Crew</a> ·
-        <a href="https://www.yacrew.com/jobs?department=engineer" style="color:#0f3460;">YaCrew</a>
+        <a href="https://www.yacrew.com" style="color:#0f3460;">YaCrew</a> ·
+        <a href="https://www.saltwaterrecruitment.com" style="color:#0f3460;">Saltwater</a> ·
+        <a href="https://www.crewin.com" style="color:#0f3460;">Crewin</a> ·
+        <a href="https://www.faststream.com" style="color:#0f3460;">Faststream</a> ·
+        <a href="https://www.ypicrew.com" style="color:#0f3460;">YPI Crew</a>{li_note}
       </p>
       {criteria}
     </div>
@@ -376,8 +499,16 @@ def main():
     seen = load_seen()
     all_jobs = []
 
-    for fn in [scrape_yotspot, scrape_crewnetwork, scrape_bluewateryachting,
-               scrape_findacrew, scrape_yacrew]:
+    scrapers = [
+        scrape_yotspot, scrape_crewnetwork, scrape_bluewateryachting,
+        scrape_findacrew, scrape_yacrew,
+        # Nuevas fuentes
+        scrape_saltwater, scrape_crewin, scrape_faststream, scrape_ypicrew,
+        # LinkedIn (solo activo si LINKEDIN_RSS_URL está configurado)
+        scrape_linkedin_rss,
+    ]
+
+    for fn in scrapers:
         name = fn.__name__.replace("scrape_", "")
         print(f"  → {name}... ", end="")
         try:
