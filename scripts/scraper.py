@@ -51,6 +51,10 @@ ROTATION_KEYWORDS = [
     "rotation", "rotational", "on/off", "on / off", "schedule",
     "2 on 2 off", "2:2", "2/2", "3 on 3 off", "3:3", "3/3",
     "4 on 4 off", "4:4", "4/4", "1 on 1 off", "rotary", "roster",
+    # Rotación expresada como días de licencia / contrato
+    "leave:", "days leave", "days off", "days on",
+    "60 days", "90 days", "30 days", "45 days",
+    "contract length", "contract period", "contract duration",
 ]
 EXCLUDE_ROTATION_KEYWORDS = [
     "non-rotational", "non rotational", "nonrotational",
@@ -88,12 +92,12 @@ def _parse_salary_eur(text: str):
 
     # Patrones: símbolo+número o número+símbolo, con + opcional (ej: $9,000+ DOE)
     patterns = [
-        (r'(?:EUR|€)\s*(\d{4,6})\+?',         "eur"),
-        (r'(\d{4,6})\+?\s*(?:EUR|€)',          "eur"),
-        (r'(?:USD|\$)\s*(\d{4,6})\+?',         "usd"),
-        (r'(\d{4,6})\+?\s*(?:USD|\$)',         "usd"),
-        (r'(?:GBP|£)\s*(\d{4,6})\+?',         "gbp"),
-        (r'(\d{4,6})\+?\s*(?:GBP|£)',         "gbp"),
+        (r'(?:EUR|€|euros?)\s*(\d{4,6})\+?',   "eur"),
+        (r'(\d{4,6})\+?\s*(?:EUR|€|euros?)',    "eur"),
+        (r'(?:USD|\$)\s*(\d{4,6})\+?',          "usd"),
+        (r'(\d{4,6})\+?\s*(?:USD|\$)',          "usd"),
+        (r'(?:GBP|£)\s*(\d{4,6})\+?',          "gbp"),
+        (r'(\d{4,6})\+?\s*(?:GBP|£)',          "gbp"),
     ]
     found = []
     for pat, currency in patterns:
