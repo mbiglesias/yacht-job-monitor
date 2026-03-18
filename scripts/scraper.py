@@ -82,14 +82,18 @@ AVAILABILITY_KEYWORDS = [
 SALARY_MIN_EUR = 6000
 
 def _parse_salary_eur(text: str):
+    # Normalizar: quitar comas de miles, y tratar $9k → $9000
     text = text.replace(",", "")
+    text = re.sub(r'(\d+)\s*k\b', lambda m: str(int(m.group(1)) * 1000), text, flags=re.IGNORECASE)
+
+    # Patrones: símbolo+número o número+símbolo, con + opcional (ej: $9,000+ DOE)
     patterns = [
-        (r"(?:€|eur)\s*(\d{4,6})", "eur"),
-        (r"(\d{4,6})\s*(?:€|eur)", "eur"),
-        (r"(?:\$|usd)\s*(\d{4,6})", "usd"),
-        (r"(\d{4,6})\s*(?:\$|usd)", "usd"),
-        (r"(?:£|gbp)\s*(\d{4,6})", "gbp"),
-        (r"(\d{4,6})\s*(?:£|gbp)", "gbp"),
+        (r'(?:EUR|€)\s*(\d{4,6})\+?',         "eur"),
+        (r'(\d{4,6})\+?\s*(?:EUR|€)',          "eur"),
+        (r'(?:USD|\$)\s*(\d{4,6})\+?',         "usd"),
+        (r'(\d{4,6})\+?\s*(?:USD|\$)',         "usd"),
+        (r'(?:GBP|£)\s*(\d{4,6})\+?',         "gbp"),
+        (r'(\d{4,6})\+?\s*(?:GBP|£)',         "gbp"),
     ]
     found = []
     for pat, currency in patterns:
@@ -99,6 +103,7 @@ def _parse_salary_eur(text: str):
                 val = int(val * 0.92)
             elif currency == "gbp":
                 val = int(val * 1.17)
+            # Si parece anual (>30.000) convertir a mensual
             if val > 30000:
                 val = val // 12
             found.append(val)
@@ -132,22 +137,50 @@ def get(url, timeout=15):
         print(f"  ⚠ Error fetching {url}: {e}")
         return ""
 
+def fetch_job_detail(url: str) -> str:
+    """
+    Entra a la página del anuncio y devuelve el texto completo.
+    Se usa solo cuando el card del listado no trae salario,
+    para no hacer demasiadas requests.
+    """
+    html = get(url, timeout=10)
+    if not html:
+        return ""
+    soup = BeautifulSoup(html, "html.parser")
+    # Quitar nav, footer, scripts
+    for tag in soup(["nav", "footer", "script", "style", "header"]):
+        tag.decompose()
+    return soup.get_text(" ", strip=True)[:3000]  # máx 3000 chars
+
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
 
-def score_job(title: str, description: str = "") -> dict:
+def score_job(title: str, description: str = "", job_url: str = "") -> dict:
     text = (title + " " + description).lower()
 
+    # Paso 1: chequeo rápido de rol con lo que tenemos del card
     is_engineer = any(kw in text for kw in ENGINEER_KEYWORDS)
     is_excluded = any(kw in text for kw in EXCLUDE_ROLE_KEYWORDS)
     if not is_engineer or (is_excluded and not any(kw in title.lower() for kw in ENGINEER_KEYWORDS)):
         return {"passes": False}
 
-    tags     = ["⚙️ Engineer"]
-    warnings = []
-
-    # Descarte duro: NO-rotación explícita
+    # Descarte duro desde el card: NO-rotación explícita
     if any(kw in text for kw in EXCLUDE_ROTATION_KEYWORDS):
         return {"passes": False}
+
+    # Paso 2: siempre entrar al detalle para leer salario, rotación y fecha
+    # El card casi nunca tiene toda esa info — está en el cuerpo del anuncio
+    if job_url:
+        detail = fetch_job_detail(job_url)
+        if detail:
+            detail_lower = detail.lower()
+            # Segundo chequeo de descarte con info completa
+            if any(kw in detail_lower for kw in EXCLUDE_ROTATION_KEYWORDS):
+                return {"passes": False}
+            # Combinar card + detalle para máxima cobertura
+            text = text + " " + detail_lower
+
+    tags     = ["⚙️ Engineer"]
+    warnings = []
 
     if any(kw in text for kw in ROTATION_KEYWORDS):
         tags.append("🔄 Rotation")
@@ -183,7 +216,7 @@ def _extract_jobs(soup, base_url, source, href_filters, title_min=8):
             if not href.startswith("http"):
                 href = base_url + href
             desc   = a.parent.get_text(" ", strip=True) if a.parent else ""
-            result = score_job(text, desc)
+            result = score_job(text, desc, job_url=href)
             if result["passes"]:
                 jobs.append({"title": text, "url": href, "source": source,
                              "tags": result["tags"], "warnings": result["warnings"]})
@@ -206,7 +239,7 @@ def scrape_yotspot():
         href  = a["href"]
         if not href.startswith("http"):
             href = "https://www.yotspot.com" + href
-        result = score_job(title, card.get_text(" ", strip=True))
+        result = score_job(title, card.get_text(" ", strip=True), job_url=href)
         if result["passes"]:
             jobs.append({"title": title, "url": href, "source": "Yotspot",
                          "tags": result["tags"], "warnings": result["warnings"]})
