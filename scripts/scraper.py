@@ -339,6 +339,33 @@ def scrape_ypicrew():
 
 # ─── NUEVAS FUENTES ────────────────────────────────────────────────────────────
 
+def scrape_bespokecrew():
+    """Bespoke Crew — agencia UK/Med con listados públicos de engineering"""
+    html = get("https://www.bespokecrew.com/jobs/?department=engineering")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.bespokecrew.com",
+                         "Bespoke Crew", ["/job/", "/jobs/", "/vacancy/", "/position/"])
+
+
+def scrape_wilsonhalligan():
+    """Wilsonhalligan — agencia UK, yates 50m+, ofertas con URLs públicas"""
+    html = get("https://www.wilsonhalligan.com/our-current-roles/")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.wilsonhalligan.com",
+                         "Wilsonhalligan", ["/job/", "/vacancy/", "/role/", "/position/"])
+
+
+def scrape_quaycrew():
+    """Quay Crew — listados con salario y rotación explícitos en el card"""
+    html = get("https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://jobs.quaygroup.com",
+                         "Quay Crew", ["/job/", "/jobs/", "/vacancy/", "/position/", ".aspx"])
+
+
 def scrape_mycrewkit():
     """
     My Crew Kit — agrega ofertas de múltiples agencias, incluyendo Wilsonhalligan.
@@ -603,6 +630,9 @@ def build_email(new_jobs):
         <a href="https://www.faststream.com" style="color:#0f3460;">Faststream</a> ·
         <a href="https://www.ypicrew.com" style="color:#0f3460;">YPI Crew</a> ·
         <a href="https://mycrewkit.com/superyacht-jobs/engineer/" style="color:#0f3460;">My Crew Kit</a> ·
+        <a href="https://www.bespokecrew.com/jobs/" style="color:#0f3460;">Bespoke Crew</a> ·
+        <a href="https://www.wilsonhalligan.com/our-current-roles/" style="color:#0f3460;">Wilsonhalligan</a> ·
+        <a href="https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx" style="color:#0f3460;">Quay Crew</a> ·
         <a href="https://crew.northropandjohnson.com/crew-jobs/" style="color:#0f3460;">Northrop &amp; Johnson</a> ·
         <a href="https://t.me/seamenjob" style="color:#0f3460;">Telegram SeamenJob</a> ·
         <a href="https://t.me/marinepublic_com" style="color:#0f3460;">Telegram MarinePublic</a>{li_note}
@@ -642,6 +672,7 @@ def main():
         scrape_saltwater, scrape_crewin, scrape_faststream, scrape_ypicrew,
         # Nuevas fuentes
         scrape_mycrewkit,
+        scrape_bespokecrew, scrape_wilsonhalligan, scrape_quaycrew,
         scrape_northropjohnson,
         scrape_telegram_seamenjob, scrape_telegram_marinepublic,
         # LinkedIn (solo activo si LINKEDIN_RSS_URL está configurado)
