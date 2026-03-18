@@ -337,6 +337,106 @@ def scrape_ypicrew():
     return _extract_jobs(soup, "https://www.ypicrew.com",
                          "YPI Crew", ["job", "vacanc", "position"])
 
+# ─── NUEVAS FUENTES ────────────────────────────────────────────────────────────
+
+def scrape_mycrewkit():
+    """
+    My Crew Kit — agrega ofertas de múltiples agencias, incluyendo Wilsonhalligan.
+    La página de engineer muestra cards con Job ID, start date y salary visibles.
+    """
+    html = get("https://mycrewkit.com/superyacht-jobs/engineer/")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+
+    jobs = []
+    # Los cards de MCK tienen estructura de artículos o divs con links a /superyacht-jobs/NNN/
+    seen_hrefs = set()
+    for a in soup.find_all("a", href=True):
+        href = a["href"]
+        text = a.get_text(strip=True)
+        # MCK usa URLs tipo /superyacht-jobs/SLUG/ o /job/ID/
+        if not re.search(r"/superyacht-jobs/[^/]+/?$|/job/\d+", href):
+            continue
+        if not text or len(text) < 6:
+            continue
+        if not href.startswith("http"):
+            href = "https://mycrewkit.com" + href
+        if href in seen_hrefs:
+            continue
+        seen_hrefs.add(href)
+        # Texto del card padre para más contexto
+        parent_text = a.parent.get_text(" ", strip=True) if a.parent else ""
+        result = score_job(text, parent_text, job_url=href)
+        if result["passes"]:
+            jobs.append({"title": text, "url": href, "source": "My Crew Kit",
+                         "tags": result["tags"], "warnings": result["warnings"]})
+    return jobs[:15]
+
+
+def _scrape_telegram(channel: str, source_label: str):
+    """
+    Scrapea la versión web pública de un canal de Telegram (t.me/s/CANAL).
+    Telegram web muestra los últimos ~20-30 posts sin login.
+    Los posts de vacantes son texto plano, sin links de detalle — se evalúan
+    directamente y la URL apunta al mensaje en Telegram.
+    """
+    url  = f"https://t.me/s/{channel}"
+    html = get(url)
+    if not html: return []
+
+    soup  = BeautifulSoup(html, "html.parser")
+    jobs  = []
+
+    # Cada mensaje está en un div.tgme_widget_message_text
+    messages = soup.select("div.tgme_widget_message_wrap")
+    if not messages:
+        # Fallback: buscar cualquier div con texto de vacante
+        messages = soup.select("div.tgme_widget_message_text")
+
+    for msg in messages[-40:]:   # últimos 40 mensajes
+        text_el = msg.select_one("div.tgme_widget_message_text")
+        if not text_el:
+            text_el = msg  # ya es el text div en el fallback
+
+        full_text = text_el.get_text(" ", strip=True)
+        if len(full_text) < 20:
+            continue
+
+        # Intentar extraer un título: primera línea no vacía
+        lines = [l.strip() for l in full_text.splitlines() if l.strip()]
+        title = lines[0][:120] if lines else full_text[:80]
+
+        # Link al mensaje específico en Telegram
+        msg_link = msg.select_one("a.tgme_widget_message_date")
+        href = msg_link["href"] if msg_link and msg_link.has_attr("href") else url
+
+        # Evaluar con el texto completo del post (sin entrar a detalle — es texto plano)
+        result = score_job(title, full_text)   # no job_url: el detalle ya está en full_text
+        if result["passes"]:
+            jobs.append({"title": title, "url": href, "source": source_label,
+                         "tags": result["tags"], "warnings": result["warnings"]})
+
+    return jobs[:10]
+
+
+def scrape_northropjohnson():
+    """Northrop & Johnson — agencia top, crew subdomain con listados públicos"""
+    html = get("https://crew.northropandjohnson.com/crew-jobs/")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://crew.northropandjohnson.com",
+                         "Northrop & Johnson", ["job", "vacanc", "position", "crew"])
+
+
+def scrape_telegram_seamenjob():
+    """t.me/s/seamenjob — canal marino general, incluye yates y offshore"""
+    return _scrape_telegram("seamenjob", "Telegram: SeamenJob")
+
+def scrape_telegram_marinepublic():
+    """t.me/s/marinepublic_com — vacantes marítimas globales"""
+    return _scrape_telegram("marinepublic_com", "Telegram: MarinePublic")
+
+
 # ─── LINKEDIN VÍA RSS ──────────────────────────────────────────────────────────
 
 def scrape_linkedin_rss():
@@ -501,7 +601,11 @@ def build_email(new_jobs):
         <a href="https://www.saltwaterrecruitment.com" style="color:#0f3460;">Saltwater</a> ·
         <a href="https://www.crewin.com" style="color:#0f3460;">Crewin</a> ·
         <a href="https://www.faststream.com" style="color:#0f3460;">Faststream</a> ·
-        <a href="https://www.ypicrew.com" style="color:#0f3460;">YPI Crew</a>{li_note}
+        <a href="https://www.ypicrew.com" style="color:#0f3460;">YPI Crew</a> ·
+        <a href="https://mycrewkit.com/superyacht-jobs/engineer/" style="color:#0f3460;">My Crew Kit</a> ·
+        <a href="https://crew.northropandjohnson.com/crew-jobs/" style="color:#0f3460;">Northrop &amp; Johnson</a> ·
+        <a href="https://t.me/seamenjob" style="color:#0f3460;">Telegram SeamenJob</a> ·
+        <a href="https://t.me/marinepublic_com" style="color:#0f3460;">Telegram MarinePublic</a>{li_note}
       </p>
       {criteria}
     </div>
@@ -535,8 +639,11 @@ def main():
     scrapers = [
         scrape_yotspot, scrape_crewnetwork, scrape_bluewateryachting,
         scrape_findacrew, scrape_yacrew,
-        # Nuevas fuentes
         scrape_saltwater, scrape_crewin, scrape_faststream, scrape_ypicrew,
+        # Nuevas fuentes
+        scrape_mycrewkit,
+        scrape_northropjohnson,
+        scrape_telegram_seamenjob, scrape_telegram_marinepublic,
         # LinkedIn (solo activo si LINKEDIN_RSS_URL está configurado)
         scrape_linkedin_rss,
     ]
