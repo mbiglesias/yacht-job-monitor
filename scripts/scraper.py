@@ -47,6 +47,32 @@ EXCLUDE_ROLE_KEYWORDS = [
     "head chef", "sous chef",
 ]
 
+# Tipos de buque comercial — descartar si aparecen sin mención de yacht/superyacht
+EXCLUDE_VESSEL_KEYWORDS = [
+    "bulk carrier", "bulk vessel", "bulker",
+    "container ship", "container vessel", "containership",
+    "tanker", "oil tanker", "chemical tanker", "lng tanker", "lpg tanker",
+    "cargo ship", "cargo vessel", "freighter",
+    "ro-ro", "roro", "roll-on roll-off",
+    "offshore vessel", "offshore platform", "drilling rig", "drillship",
+    "fpso", "fsru", "fso",
+    "tug", "tugboat", "towing vessel",
+    "dredger", "dredging vessel",
+    "ferry", "passenger ferry", "cruise ship", "cruise liner",
+    "research vessel", "survey vessel",
+    "naval vessel", "military vessel",
+    "merchant vessel", "merchant ship", "merchant navy",
+    "stcw", "gmdss",        # certificaciones exclusivas de marina mercante
+    "coc class 2", "coc class 1",  # certificados de marina mercante
+]
+
+# Palabras que confirman que SÍ es un yate — anulan la exclusión por tipo de buque
+YACHT_CONFIRM_KEYWORDS = [
+    "yacht", "superyacht", "super yacht", "motor yacht", "sailing yacht",
+    "private yacht", "luxury yacht", "megayacht", "mega yacht",
+    "myacht", "m/y", "s/y", "sy ", "my ",
+]
+
 ROTATION_KEYWORDS = [
     "rotation", "rotational", "on/off", "on / off", "schedule",
     "2 on 2 off", "2:2", "2/2", "3 on 3 off", "3:3", "3/3",
@@ -182,6 +208,12 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
                 return {"passes": False}
             # Combinar card + detalle para máxima cobertura
             text = text + " " + detail_lower
+
+    # Descarte por tipo de buque comercial — salvo que confirme ser un yate
+    is_commercial = any(kw in text for kw in EXCLUDE_VESSEL_KEYWORDS)
+    is_yacht      = any(kw in text for kw in YACHT_CONFIRM_KEYWORDS)
+    if is_commercial and not is_yacht:
+        return {"passes": False}
 
     tags     = ["⚙️ Engineer"]
     warnings = []
