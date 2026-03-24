@@ -49,21 +49,39 @@ EXCLUDE_ROLE_KEYWORDS = [
 
 # Tipos de buque comercial — descartar si aparecen sin mención de yacht/superyacht
 EXCLUDE_VESSEL_KEYWORDS = [
+    # Bulk / cargo
     "bulk carrier", "bulk vessel", "bulker",
     "container ship", "container vessel", "containership",
-    "tanker", "oil tanker", "chemical tanker", "lng tanker", "lpg tanker",
     "cargo ship", "cargo vessel", "freighter",
     "ro-ro", "roro", "roll-on roll-off",
-    "offshore vessel", "offshore platform", "drilling rig", "drillship",
-    "fpso", "fsru", "fso",
+    # Tankers
+    "tanker", "oil tanker", "chemical tanker", "lng tanker", "lpg tanker",
+    "crude oil", "vlcc", "ulcc", "aframax", "suezmax", "panamax",
+    "product tanker", "crude carrier",
+    # Offshore
+    "offshore vessel", "offshore platform", "offshore support",
+    "drilling rig", "drillship", "jack-up", "jackup",
+    "fpso", "fsru", "fso", "ahts", "psv",
+    # Otros buques comerciales
     "tug", "tugboat", "towing vessel",
     "dredger", "dredging vessel",
     "ferry", "passenger ferry", "cruise ship", "cruise liner",
     "research vessel", "survey vessel",
     "naval vessel", "military vessel",
     "merchant vessel", "merchant ship", "merchant navy",
-    "stcw", "gmdss",        # certificaciones exclusivas de marina mercante
-    "coc class 2", "coc class 1",  # certificados de marina mercante
+    # Empresas / contexto de marina mercante
+    "shipmanagement", "ship management", "ship manager",
+    "manning agency", "crewing agency commercial",
+    "columbia shipmanagement", "wallem", "v.ships", "v ships", "bernhard schulte",
+    "thome group", "thome ship", "anglo-eastern", "anglo eastern",
+    "fleet management", "danaos", "costamare",
+    # Certificaciones exclusivas de marina mercante (sin contexto de yate)
+    "gmdss",
+    "coc class 2", "coc class 1",
+    # Términos operativos de marina mercante
+    "voyage duration", "voyage contract",
+    "embarkation port", "joining port",
+    "port of joining",
 ]
 
 # Palabras que confirman que SÍ es un yate — anulan la exclusión por tipo de buque
