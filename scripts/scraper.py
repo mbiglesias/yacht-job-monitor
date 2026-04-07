@@ -51,9 +51,13 @@ EXCLUDE_ROLE_KEYWORDS = [
 EXCLUDE_VESSEL_KEYWORDS = [
     # Bulk / cargo
     "bulk carrier", "bulk vessel", "bulker",
+    "general cargo", "general cargo vessel", "general cargo ship",
     "container ship", "container vessel", "containership",
     "cargo ship", "cargo vessel", "freighter",
     "ro-ro", "roro", "roll-on roll-off",
+    "dwt",                      # deadweight tonnage — exclusivo de marina mercante
+    "vessel's type",            # formato típico de anuncios Eurocrew/Telegram comercial
+    "vessel type:",             # variante
     # Tankers
     "tanker", "oil tanker", "chemical tanker", "lng tanker", "lpg tanker",
     "crude oil", "vlcc", "ulcc", "aframax", "suezmax", "panamax",
@@ -72,9 +76,9 @@ EXCLUDE_VESSEL_KEYWORDS = [
     # Empresas / contexto de marina mercante
     "shipmanagement", "ship management", "ship manager",
     "manning agency", "crewing agency commercial",
-    "columbia shipmanagement", "wallem", "v.ships", "v ships", "bernhard schulte",
-    "thome group", "thome ship", "anglo-eastern", "anglo eastern",
-    "fleet management", "danaos", "costamare",
+    "eurocrew", "columbia shipmanagement", "wallem", "v.ships", "v ships",
+    "bernhard schulte", "thome group", "thome ship", "anglo-eastern", "anglo eastern",
+    "fleet management", "danaos", "costamare", "starbulk", "diana shipping",
     # Certificaciones exclusivas de marina mercante (sin contexto de yate)
     "gmdss",
     "coc class 2", "coc class 1",
