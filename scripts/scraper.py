@@ -110,6 +110,10 @@ EXCLUDE_ROTATION_KEYWORDS = [
     "full time permanent", "live aboard", "live-aboard", "liveaboard",
     "no rotation", "not rotational", "without rotation",
     "perm contract", "perm position",
+    # "Permanent" suelto como tipo de contrato (ej: "Type: Engineer / Permanent")
+    "/ permanent", ": permanent", "type: permanent",
+    "contract type: permanent", "employment type: permanent",
+    "contract: permanent",
 ]
 
 def _availability_months():
@@ -134,31 +138,54 @@ AVAILABILITY_KEYWORDS = [
 SALARY_MIN_EUR = 6000
 
 def _parse_salary_eur(text: str):
-    # Normalizar: quitar comas de miles, y tratar $9k → $9000
+    # Normalizar: quitar comas de miles, tratar 9k → 9000
     text = text.replace(",", "")
     text = re.sub(r'(\d+)\s*k\b', lambda m: str(int(m.group(1)) * 1000), text, flags=re.IGNORECASE)
 
-    # Patrones: símbolo+número o número+símbolo, con + opcional (ej: $9,000+ DOE)
-    patterns = [
-        (r'(?:EUR|€|euros?)\s*(\d{4,6})\+?',   "eur"),
-        (r'(\d{4,6})\+?\s*(?:EUR|€|euros?)',    "eur"),
-        (r'(?:USD|\$)\s*(\d{4,6})\+?',          "usd"),
-        (r'(\d{4,6})\+?\s*(?:USD|\$)',          "usd"),
-        (r'(?:GBP|£)\s*(\d{4,6})\+?',          "gbp"),
-        (r'(\d{4,6})\+?\s*(?:GBP|£)',          "gbp"),
-    ]
+    def to_eur(val, currency):
+        if currency == "usd":  val = int(val * 0.92)
+        elif currency == "gbp": val = int(val * 1.17)
+        if val > 30000: val = val // 12   # anual → mensual
+        return val
+
     found = []
-    for pat, currency in patterns:
+
+    # 1. Rangos primero: "5500-6000 USD", "EUR 6000-7000", "£6000 - £7000"
+    range_patterns = [
+        (r'(?:EUR|€|euros?)\s*(\d{4,6})\s*[-–]\s*(\d{4,6})',  "eur"),
+        (r'(\d{4,6})\s*[-–]\s*(\d{4,6})\s*(?:EUR|€|euros?)',  "eur"),
+        (r'(?:USD|\$)\s*(\d{4,6})\s*[-–]\s*(\d{4,6})',        "usd"),
+        (r'(\d{4,6})\s*[-–]\s*(\d{4,6})\s*(?:USD|\$)',        "usd"),
+        (r'(?:GBP|£)\s*(\d{4,6})\s*[-–]\s*(\d{4,6})',        "gbp"),
+        (r'(\d{4,6})\s*[-–]\s*(\d{4,6})\s*(?:GBP|£)',        "gbp"),
+    ]
+    range_positions = set()   # evitar que los números del rango se procesen de nuevo
+    for pat, currency in range_patterns:
         for m in re.finditer(pat, text, re.IGNORECASE):
-            val = int(m.group(1))
-            if currency == "usd":
-                val = int(val * 0.92)
-            elif currency == "gbp":
-                val = int(val * 1.17)
-            # Si parece anual (>30.000) convertir a mensual
-            if val > 30000:
-                val = val // 12
+            lo = to_eur(int(m.group(1)), currency)
+            hi = to_eur(int(m.group(2)), currency)
+            # Usar el máximo del rango, pero solo si el mínimo ya supera el umbral
+            # Si el rango entero está por debajo (ej: 5500-6000 USD ≈ 5060-5520€), descartamos
+            found.append(hi)
+            range_positions.update(range(m.start(), m.end()))
+
+    # 2. Valores sueltos: "$9,000+", "7500 EUR", etc.
+    single_patterns = [
+        (r'(?:EUR|€|euros?)\s*(\d{4,6})\+?',  "eur"),
+        (r'(\d{4,6})\+?\s*(?:EUR|€|euros?)',   "eur"),
+        (r'(?:USD|\$)\s*(\d{4,6})\+?',         "usd"),
+        (r'(\d{4,6})\+?\s*(?:USD|\$)',         "usd"),
+        (r'(?:GBP|£)\s*(\d{4,6})\+?',         "gbp"),
+        (r'(\d{4,6})\+?\s*(?:GBP|£)',         "gbp"),
+    ]
+    for pat, currency in single_patterns:
+        for m in re.finditer(pat, text, re.IGNORECASE):
+            # Saltar si este número ya fue parte de un rango
+            if any(p in range_positions for p in range(m.start(), m.end())):
+                continue
+            val = to_eur(int(m.group(1)), currency)
             found.append(val)
+
     return max(found) if found else None
 
 # ─── HELPERS ───────────────────────────────────────────────────────────────────
