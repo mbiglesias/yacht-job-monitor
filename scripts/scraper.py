@@ -110,11 +110,15 @@ EXCLUDE_ROTATION_KEYWORDS = [
     "full time permanent", "live aboard", "live-aboard", "liveaboard",
     "no rotation", "not rotational", "without rotation",
     "perm contract", "perm position",
-    # "Permanent" suelto como tipo de contrato (ej: "Type: Engineer / Permanent")
+    # "Permanent" como tipo de contrato en cualquier formato de campo
     "/ permanent", ": permanent", "type: permanent",
     "contract type: permanent", "employment type: permanent",
-    "contract: permanent",
+    "contract: permanent", "job type: permanent",
+    "job type:permanent", "type:permanent",
 ]
+
+# Detecta "permanent" como palabra sola, pero NO "non-permanent"
+_PERMANENT_RE = re.compile(r'(?<!non[-\s])(?<!non)\bpermanent\b', re.IGNORECASE)
 
 def _availability_months():
     months_en = ["january","february","march","april","may","june",
@@ -242,20 +246,18 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
     if not is_engineer or (is_excluded and not any(kw in title.lower() for kw in ENGINEER_KEYWORDS)):
         return {"passes": False}
 
-    # Descarte duro desde el card: NO-rotación explícita
-    if any(kw in text for kw in EXCLUDE_ROTATION_KEYWORDS):
+    # Descarte duro desde el card: NO-rotación explícita o "permanent" suelto
+    if any(kw in text for kw in EXCLUDE_ROTATION_KEYWORDS) or _PERMANENT_RE.search(text):
         return {"passes": False}
 
     # Paso 2: siempre entrar al detalle para leer salario, rotación y fecha
-    # El card casi nunca tiene toda esa info — está en el cuerpo del anuncio
     if job_url:
         detail = fetch_job_detail(job_url)
         if detail:
             detail_lower = detail.lower()
-            # Segundo chequeo de descarte con info completa
-            if any(kw in detail_lower for kw in EXCLUDE_ROTATION_KEYWORDS):
+            # Segundo chequeo con info completa
+            if any(kw in detail_lower for kw in EXCLUDE_ROTATION_KEYWORDS) or _PERMANENT_RE.search(detail_lower):
                 return {"passes": False}
-            # Combinar card + detalle para máxima cobertura
             text = text + " " + detail_lower
 
     # Descarte por tipo de buque comercial — salvo que confirme ser un yate
