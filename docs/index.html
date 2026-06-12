@@ -42,34 +42,34 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* ── HEADER ──────────────────────────────────── */
 .topbar{background:var(--navy);position:sticky;top:0;z-index:100;
   box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.topbar-row1{display:flex;align-items:center;gap:10px;
-  padding:10px 16px 8px;max-width:900px;margin:0 auto}
-.logo{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none}
+.topbar-logo-row{display:flex;align-items:center;gap:10px;
+  padding:10px 16px 0;max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .logo-ico{width:32px;height:32px;background:rgba(14,165,233,.15);
   border:1.5px solid rgba(14,165,233,.3);border-radius:8px;
-  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.logo-text h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
-  color:#fff;line-height:1}
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;
+  color:#fff;line-height:1;white-space:nowrap}
 .logo-text h1 span{color:var(--sea)}
-.logo-text small{font-size:10px;color:#475569;display:block;margin-top:2px}
-.topbar-search{padding:0 16px 10px;max-width:900px;margin:0 auto}
+.logo-text small{font-size:10px;color:#64748b;display:block;margin-top:2px;white-space:nowrap}
+/* Search row — always below logo on mobile */
+.topbar-search{padding:8px 16px 10px;max-width:900px;margin:0 auto}
 .search-wrap{position:relative}
 .search-wrap input{width:100%;background:rgba(255,255,255,.08);
   border:1.5px solid rgba(255,255,255,.12);border-radius:9px;
-  padding:10px 12px 10px 34px;color:#fff;font-size:14px;
+  padding:9px 12px 9px 34px;color:#fff;font-size:14px;
   font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none;
-  -webkit-tap-highlight-color:transparent}
-.search-wrap input::placeholder{color:#475569}
+  -webkit-tap-highlight-color:transparent;box-sizing:border-box}
+.search-wrap input::placeholder{color:#64748b}
 .search-wrap input:focus{border-color:var(--sea)}
 .search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);
-  color:#475569;font-size:13px;pointer-events:none}
+  color:#64748b;font-size:13px;pointer-events:none}
 
 /* ── FILTER PILLS ────────────────────────────── */
 .pills-bar{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08);
   overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pills-bar::-webkit-scrollbar{display:none}
-.pills-inner{display:flex;gap:6px;padding:0 16px 10px;
-  max-width:900px;margin:0 auto;width:max-content;min-width:100%}
+.pills-inner{display:flex;gap:6px;padding:0 16px 10px;width:max-content;min-width:100%}
 .pill{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;
   border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
   background:rgba(255,255,255,.05);color:#94a3b8;
@@ -170,43 +170,17 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .content{grid-template-columns:200px 1fr;align-items:start}
   .sidebar-toggle{display:none}
   .sidebar-body{display:block!important;border:1px solid var(--border);
-    border-radius:var(--radius);padding:14px;position:sticky;top:96px}
+    border-radius:var(--radius);padding:14px;position:sticky;top:72px}
   .src-grid{grid-template-columns:1fr}
   .card:hover{box-shadow:0 4px 16px rgba(10,37,64,.08);border-color:#bfdbfe}
-  /* Desktop: logo + search on same row */
-  .topbar-row1{padding-bottom:10px}
+  .topbar-logo-row{padding-bottom:10px;display:flex;align-items:center;gap:16px}
   .topbar-search{display:none}
-  .topbar-row1::after{content:'';display:none}
-  .logo{flex:0 0 auto}
-  .topbar-row1{position:relative}
-  .desktop-search{flex:1;position:relative;margin-left:auto}
-  .desktop-search input{width:100%;background:rgba(255,255,255,.08);
-    border:1.5px solid rgba(255,255,255,.12);border-radius:9px;
-    padding:8px 12px 8px 34px;color:#fff;font-size:13px;
-    font-family:'Inter',sans-serif;outline:none}
-  .desktop-search input::placeholder{color:#475569}
-  .desktop-search input:focus{border-color:var(--sea)}
-  .desktop-search .search-ico{position:absolute;left:11px;top:50%;
-    transform:translateY(-50%);color:#475569;font-size:12px;pointer-events:none}
+  /* Inject search inline — handled by JS repositionSearch() */
 }
 </style>
 
 <script>
 window.JOBS_DATA = [
-  {
-    "title": "Engineering Department",
-    "url": "https://mycrewkit.com/superyacht-jobs/engineer/",
-    "source": "My Crew Kit",
-    "tags": [
-      "⚙️ Engineer",
-      "📅 Inicio ~2 meses"
-    ],
-    "warnings": [
-      "⚠️ Rotación no mencionada",
-      "⚠️ Salario no especificado"
-    ],
-    "posted": null
-  },
   {
     "title": "Engineer Jobs",
     "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
@@ -222,7 +196,7 @@ window.JOBS_DATA = [
     "posted": null
   }
 ];
-window.GENERATED_AT = "2026-06-12T19:06:48.633725Z";
+window.GENERATED_AT = "2026-06-12T19:17:37.538440Z";
 window.PASSWORD_HASH = "7ee9f8c6c57d6874984bb87dc20ee2ab96c5886e9051273641c1dcd1701c90b0";
 </script>
 
@@ -246,7 +220,7 @@ window.PASSWORD_HASH = "7ee9f8c6c57d6874984bb87dc20ee2ab96c5886e9051273641c1dcd1
 <div id="app">
 
 <div class="topbar">
-  <div class="topbar-row1">
+  <div class="topbar-logo-row" id="topbar-logo-row">
     <div class="logo">
       <div class="logo-ico">⚙️</div>
       <div class="logo-text">
@@ -254,13 +228,8 @@ window.PASSWORD_HASH = "7ee9f8c6c57d6874984bb87dc20ee2ab96c5886e9051273641c1dcd1
         <small>Engineer · Rotation · ≥6K€ · ~2 meses</small>
       </div>
     </div>
-    <div class="desktop-search">
-      <span class="search-ico">🔍</span>
-      <input type="search" id="search-desktop" placeholder="Buscar por título, fuente, salario…"
-             oninput="document.getElementById('search').value=this.value;render()">
-    </div>
   </div>
-  <div class="topbar-search">
+  <div class="topbar-search" id="topbar-search-row">
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
       <input type="search" id="search" placeholder="Buscar por título, fuente, salario…" oninput="render()">
@@ -346,7 +315,33 @@ const ICONS={
 let _jobs=[], filter='all', sortBy='', hiddenSrc=new Set(), _ready=false;
 const PW=window.PASSWORD_HASH||'';
 
-// ── AUTH ──────────────────────────────────────────────────────────────────────
+// ── SEARCH POSITION ───────────────────────────────────────────────────────────
+// On desktop: move search wrap into logo row inline
+// On mobile: keep it in its own row
+function repositionSearch() {
+  const isDesktop = window.innerWidth >= 680;
+  const logoRow   = document.getElementById('topbar-logo-row');
+  const searchRow = document.getElementById('topbar-search-row');
+  const searchWrap = searchRow.querySelector('.search-wrap');
+
+  if (isDesktop) {
+    // Move search into logo row if not already there
+    if (!logoRow.contains(searchWrap)) {
+      searchWrap.style.flex = '1';
+      logoRow.appendChild(searchWrap);
+      searchRow.style.display = 'none';
+    }
+  } else {
+    // Move search back into its row if not already there
+    if (!searchRow.contains(searchWrap)) {
+      searchWrap.style.flex = '';
+      searchRow.appendChild(searchWrap);
+      searchRow.style.display = '';
+    }
+  }
+}
+window.addEventListener('resize', repositionSearch);
+repositionSearch();
 async function sha256(s){
   const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
   return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
