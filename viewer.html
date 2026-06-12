@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yacht Engineer Jobs</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+  :root {
+    --navy:    #0a2540;
+    --navy2:   #0f3460;
+    --blue:    #1a56db;
+    --sea:     #0ea5e9;
+    --light:   #f0f7ff;
+    --border:  #dbeafe;
+    --text:    #0f172a;
+    --muted:   #64748b;
+    --bg:      #f8fafc;
+    --white:   #ffffff;
+    --green:   #059669;
+    --green-bg:#ecfdf5;
+    --amber:   #92400e;
+    --amber-bg:#fffbeb;
+    --red:     #dc2626;
+    --tag-bg:  #eff6ff;
+    --tag-fg:  #1d4ed8;
+    --tag-br:  #bfdbfe;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 16px rgba(0,0,0,.25);
+  }
+  .header-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .logo-icon {
+    width: 40px; height: 40px;
+    background: rgba(14,165,233,.15);
+    border: 1.5px solid rgba(14,165,233,.3);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+  }
+  .logo h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.1;
+  }
+  .logo span { color: var(--sea); }
+  .logo small {
+    display: block;
+    font-size: 11px;
+    font-weight: 400;
+    color: #64748b;
+    font-family: 'Inter', sans-serif;
+    letter-spacing: .03em;
+  }
+
+  /* ── SEARCH ── */
+  .search-wrap {
+    flex: 1;
+    min-width: 200px;
+    position: relative;
+  }
+  .search-wrap input {
+    width: 100%;
+    background: rgba(255,255,255,.07);
+    border: 1.5px solid rgba(255,255,255,.12);
+    border-radius: 8px;
+    padding: 9px 14px 9px 38px;
+    color: #fff;
+    font-size: 14px;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .search-wrap input::placeholder { color: #475569; }
+  .search-wrap input:focus { border-color: var(--sea); }
+  .search-wrap .icon {
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: #475569; font-size: 14px; pointer-events: none;
+  }
+
+  /* ── FILTER PILLS ── */
+  .filters {
+    display: flex; gap: 6px; flex-wrap: wrap;
+    align-items: center;
+  }
+  .pill {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 11px;
+    border-radius: 20px;
+    border: 1.5px solid rgba(255,255,255,.12);
+    background: rgba(255,255,255,.05);
+    color: #94a3b8;
+    font-size: 12px; font-weight: 500;
+    cursor: pointer; transition: all .15s;
+    white-space: nowrap;
+  }
+  .pill:hover { border-color: rgba(255,255,255,.25); color: #fff; }
+  .pill.active {
+    background: var(--sea);
+    border-color: var(--sea);
+    color: #fff;
+  }
+  .pill .dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: currentColor; opacity: .7;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--muted);
+  }
+  .stat strong { color: var(--text); font-weight: 600; }
+  .stat-divider { color: #cbd5e1; }
+  .last-updated {
+    margin-left: auto;
+    font-size: 12px; color: var(--muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+  .pulse {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--green);
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; transform: scale(1); }
+    50%      { opacity: .5; transform: scale(1.3); }
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px 48px;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    position: sticky;
+    top: 73px;
+  }
+  .sidebar-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .sidebar-title {
+    font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .07em;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .source-item {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 5px 0;
+    border-bottom: 1px solid #f1f5f9;
+    cursor: pointer;
+  }
+  .source-item:last-child { border-bottom: none; }
+  .source-name {
+    font-size: 13px; color: var(--text);
+    display: flex; align-items: center; gap: 6px;
+  }
+  .source-name input[type=checkbox] { accent-color: var(--blue); }
+  .source-count {
+    font-size: 11px; font-weight: 600;
+    background: var(--tag-bg); color: var(--tag-fg);
+    border: 1px solid var(--tag-br);
+    border-radius: 10px; padding: 1px 7px;
+    min-width: 22px; text-align: center;
+  }
+  .filter-chip {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 6px;
+    border: 1.5px solid var(--border);
+    background: var(--white);
+    font-size: 12px; cursor: pointer;
+    color: var(--muted); margin: 3px 3px 0 0;
+    transition: all .15s;
+  }
+  .filter-chip:hover { border-color: var(--blue); color: var(--blue); }
+  .filter-chip.active {
+    background: var(--tag-bg);
+    border-color: var(--tag-br);
+    color: var(--tag-fg);
+    font-weight: 600;
+  }
+
+  /* ── JOB CARDS ── */
+  .jobs-header {
+    display: flex; align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+  }
+  .jobs-count {
+    font-size: 14px; color: var(--muted);
+  }
+  .jobs-count strong { color: var(--text); }
+  .sort-select {
+    font-size: 12px; border: 1px solid var(--border);
+    border-radius: 6px; padding: 5px 8px;
+    background: var(--white); color: var(--muted);
+    cursor: pointer; outline: none;
+  }
+
+  #jobs-list { display: flex; flex-direction: column; gap: 10px; }
+
+  .job-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    transition: box-shadow .15s, border-color .15s;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .job-card:hover {
+    box-shadow: 0 4px 16px rgba(10,37,64,.08);
+    border-color: #bfdbfe;
+  }
+  .job-card.new-today {
+    border-left: 3px solid var(--sea);
+  }
+  .source-avatar {
+    width: 40px; height: 40px; border-radius: 8px;
+    background: var(--light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; flex-shrink: 0;
+    border: 1px solid var(--border);
+    font-weight: 700; color: var(--navy2);
+    font-size: 13px;
+  }
+  .job-main { flex: 1; min-width: 0; }
+  .job-title {
+    font-size: 15px; font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 4px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .job-source {
+    font-size: 12px; color: var(--muted); margin-bottom: 8px;
+  }
+  .job-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag {
+    display: inline-flex; align-items: center; gap: 3px;
+    padding: 2px 9px; border-radius: 5px;
+    font-size: 11px; font-weight: 500;
+  }
+  .tag.engineer { background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe; }
+  .tag.rotation { background: #f0fdf4; color: #15803d; border: 1px solid #bbf7d0; }
+  .tag.date     { background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; }
+  .tag.salary   { background: #fefce8; color: #a16207; border: 1px solid #fde68a; }
+  .tag.warn     { background: #f8fafc; color: #94a3b8; border: 1px solid #e2e8f0; }
+  .job-cta {
+    flex-shrink: 0;
+    display: flex; flex-direction: column; align-items: flex-end; gap: 6px;
+  }
+  .btn-view {
+    background: var(--navy2);
+    color: #fff; padding: 7px 16px;
+    border-radius: 7px; font-size: 13px; font-weight: 600;
+    text-decoration: none; white-space: nowrap;
+    transition: background .15s;
+  }
+  .btn-view:hover { background: var(--blue); }
+  .badge-new {
+    font-size: 10px; font-weight: 700;
+    background: var(--sea); color: #fff;
+    border-radius: 4px; padding: 2px 6px;
+    letter-spacing: .04em; text-transform: uppercase;
+  }
+
+  /* ── EMPTY STATE ── */
+  #empty {
+    display: none;
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--muted);
+  }
+  #empty .empty-icon { font-size: 40px; margin-bottom: 12px; }
+  #empty p { font-size: 15px; font-weight: 500; color: var(--text); }
+  #empty small { font-size: 13px; }
+
+  /* ── HOW TO USE (sidebar bottom) ── */
+  .how-to {
+    font-size: 12px; color: var(--muted); line-height: 1.7;
+  }
+  .how-to a { color: var(--blue); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 720px) {
+    .main { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .header-inner { padding: 12px 16px; }
+    .stats-bar { padding: 10px 16px; }
+    .main { padding: 0 16px 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo">
+      <div class="logo-icon">⚙️</div>
+      <div>
+        <h1>Yacht Engineer <span>Jobs</span></h1>
+        <small>Engineer · Rotation · ≥6.000€ · ~2 meses</small>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="search" placeholder="Buscar por título, fuente, salario…" oninput="filterJobs()">
+    </div>
+    <div class="filters">
+      <div class="pill active" data-filter="all" onclick="setFilter('all',this)"><span class="dot"></span> Todos</div>
+      <div class="pill" data-filter="rotation" onclick="setFilter('rotation',this)">🔄 Rotation confirmado</div>
+      <div class="pill" data-filter="salary" onclick="setFilter('salary',this)">💶 Con salario</div>
+      <div class="pill" data-filter="date" onclick="setFilter('date',this)">📅 Fecha confirmada</div>
+    </div>
+  </div>
+</header>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat"><strong id="count-total">0</strong>&nbsp;ofertas</div>
+  <div class="stat-divider">·</div>
+  <div class="stat"><strong id="count-sources">0</strong>&nbsp;fuentes</div>
+  <div class="stat-divider">·</div>
+  <div class="stat"><strong id="count-salary">0</strong>&nbsp;con salario confirmado</div>
+  <div class="last-updated">
+    <div class="pulse"></div>
+    <span id="updated-at">—</span>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-title">Fuentes</div>
+      <div id="source-list"></div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Criterios activos</div>
+      <div class="how-to">
+        ⚙️ Engineer / ETO<br>
+        🔄 Con rotación<br>
+        🚫 Descarta "permanent"<br>
+        📅 Inicio hasta ~2 meses<br>
+        💶 Salario ≥ 6.000€/mes<br>
+        🚢 Solo yates (no buques)<br><br>
+        16 fuentes monitoreadas.<br>
+        Actualizado 2× al día.
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-title">Fuentes</div>
+      <div class="how-to">
+        <a href="https://www.yotspot.com/jobs/?department=engineer" target="_blank">Yotspot</a> ·
+        <a href="https://www.crewnetwork.com" target="_blank">Crew Network</a> ·
+        <a href="https://www.bluewateryachting.com" target="_blank">Bluewater</a> ·
+        <a href="https://www.findacrew.com" target="_blank">Find a Crew</a> ·
+        <a href="https://www.yacrew.com" target="_blank">YaCrew</a> ·
+        <a href="https://www.saltwaterrecruitment.com" target="_blank">Saltwater</a> ·
+        <a href="https://www.crewin.com" target="_blank">Crewin</a> ·
+        <a href="https://www.faststream.com" target="_blank">Faststream</a> ·
+        <a href="https://www.ypicrew.com" target="_blank">YPI Crew</a> ·
+        <a href="https://mycrewkit.com" target="_blank">My Crew Kit</a> ·
+        <a href="https://www.bespokecrew.com" target="_blank">Bespoke Crew</a> ·
+        <a href="https://www.wilsonhalligan.com" target="_blank">Wilsonhalligan</a> ·
+        <a href="https://jobs.quaygroup.com" target="_blank">Quay Crew</a> ·
+        <a href="https://crew.northropandjohnson.com" target="_blank">N&amp;J</a> ·
+        <a href="https://t.me/seamenjob" target="_blank">Telegram SJ</a> ·
+        <a href="https://t.me/marinepublic_com" target="_blank">Telegram MP</a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- JOB LIST -->
+  <div>
+    <div class="jobs-header">
+      <div class="jobs-count">Mostrando <strong id="count-visible">0</strong> ofertas</div>
+      <select class="sort-select" onchange="sortJobs(this.value)">
+        <option value="default">Orden por defecto</option>
+        <option value="salary">Mayor salario</option>
+        <option value="source">Por fuente</option>
+      </select>
+    </div>
+    <div id="jobs-list"></div>
+    <div id="empty">
+      <div class="empty-icon">📭</div>
+      <p>Sin resultados para ese filtro</p>
+      <small>Probá con otro término o quitá los filtros activos</small>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATOS ────────────────────────────────────────────────────────────────────
+// Este archivo es generado automáticamente por el scraper.
+// Para actualizar: ejecutar generate_viewer.py o pegar los datos manualmente.
+const JOBS_DATA = window.JOBS_DATA || [];
+const GENERATED_AT = window.GENERATED_AT || null;
+
+// ── SOURCE ICONS ─────────────────────────────────────────────────────────────
+const SOURCE_ICONS = {
+  "Yotspot": "YS", "Crew Network": "CN", "Bluewater Yachting": "BW",
+  "Find a Crew": "FC", "YaCrew": "YC", "Saltwater Recruitment": "SW",
+  "Crewin": "CR", "Faststream": "FS", "YPI Crew": "YP",
+  "My Crew Kit": "MC", "Bespoke Crew": "BC", "Wilsonhalligan": "WH",
+  "Quay Crew": "QC", "Northrop & Johnson": "NJ",
+  "Telegram: SeamenJob": "TG", "Telegram: MarinePublic": "TG",
+  "LinkedIn": "LI",
+};
+
+// ── STATE ─────────────────────────────────────────────────────────────────────
+let activeFilter = 'all';
+let activeSources = new Set();
+let currentSort = 'default';
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  if (GENERATED_AT) {
+    const d = new Date(GENERATED_AT);
+    document.getElementById('updated-at').textContent =
+      'Actualizado ' + d.toLocaleDateString('es-UY', {day:'numeric',month:'short'}) +
+      ' ' + d.toLocaleTimeString('es-UY', {hour:'2-digit',minute:'2-digit'});
+  }
+
+  // Build source list
+  const sources = {};
+  JOBS_DATA.forEach(j => { sources[j.source] = (sources[j.source] || 0) + 1; });
+  const srcEl = document.getElementById('source-list');
+  Object.entries(sources).sort((a,b)=>b[1]-a[1]).forEach(([src, count]) => {
+    const div = document.createElement('div');
+    div.className = 'source-item';
+    div.innerHTML = `
+      <label class="source-name">
+        <input type="checkbox" checked onchange="toggleSource('${src}')"> ${src}
+      </label>
+      <span class="source-count">${count}</span>`;
+    srcEl.appendChild(div);
+  });
+
+  // Stats
+  document.getElementById('count-total').textContent = JOBS_DATA.length;
+  document.getElementById('count-sources').textContent = Object.keys(sources).length;
+  const withSalary = JOBS_DATA.filter(j => j.tags && j.tags.some(t => t.includes('€'))).length;
+  document.getElementById('count-salary').textContent = withSalary;
+
+  renderJobs();
+}
+
+function toggleSource(src) {
+  if (activeSources.has(src)) activeSources.delete(src);
+  else activeSources.add(src);
+  renderJobs();
+}
+
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderJobs();
+}
+
+function sortJobs(val) {
+  currentSort = val;
+  renderJobs();
+}
+
+function filterJobs() { renderJobs(); }
+
+function renderJobs() {
+  const q = document.getElementById('search').value.toLowerCase();
+  let jobs = [...JOBS_DATA];
+
+  // Source filter
+  if (activeSources.size > 0) {
+    jobs = jobs.filter(j => !activeSources.has(j.source));
+  }
+
+  // Tag filter
+  if (activeFilter === 'rotation') jobs = jobs.filter(j => j.tags && j.tags.some(t => t.includes('Rotation') || t.includes('🔄')));
+  if (activeFilter === 'salary')   jobs = jobs.filter(j => j.tags && j.tags.some(t => t.includes('€')));
+  if (activeFilter === 'date')     jobs = jobs.filter(j => j.tags && j.tags.some(t => t.includes('📅')));
+
+  // Search
+  if (q) jobs = jobs.filter(j =>
+    j.title.toLowerCase().includes(q) ||
+    j.source.toLowerCase().includes(q) ||
+    (j.tags || []).join(' ').toLowerCase().includes(q)
+  );
+
+  // Sort
+  if (currentSort === 'salary') {
+    jobs.sort((a, b) => {
+      const sa = (a.tags || []).find(t => t.includes('€')) || '';
+      const sb = (b.tags || []).find(t => t.includes('€')) || '';
+      const na = parseInt(sa.replace(/[^\d]/g,'')) || 0;
+      const nb = parseInt(sb.replace(/[^\d]/g,'')) || 0;
+      return nb - na;
+    });
+  } else if (currentSort === 'source') {
+    jobs.sort((a,b) => a.source.localeCompare(b.source));
+  }
+
+  const list = document.getElementById('jobs-list');
+  const empty = document.getElementById('empty');
+  list.innerHTML = '';
+  document.getElementById('count-visible').textContent = jobs.length;
+
+  if (jobs.length === 0) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+
+  jobs.forEach((j, i) => {
+    const isNew = i < 5; // primeras 5 como "recientes"
+    const icon = SOURCE_ICONS[j.source] || j.source.substring(0,2).toUpperCase();
+    const tags = (j.tags || []).map(t => {
+      let cls = 'tag';
+      if (t.includes('⚙️')) cls += ' engineer';
+      else if (t.includes('🔄')) cls += ' rotation';
+      else if (t.includes('📅')) cls += ' date';
+      else if (t.includes('💶')) cls += ' salary';
+      return `<span class="${cls}">${t}</span>`;
+    }).join('');
+    const warns = (j.warnings || []).map(w =>
+      `<span class="tag warn">${w}</span>`
+    ).join('');
+
+    const card = document.createElement('a');
+    card.className = 'job-card' + (isNew ? ' new-today' : '');
+    card.href = j.url;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.innerHTML = `
+      <div class="source-avatar">${icon}</div>
+      <div class="job-main">
+        <div class="job-title">${j.title}</div>
+        <div class="job-source">${j.source}</div>
+        <div class="job-tags">${tags}${warns}</div>
+      </div>
+      <div class="job-cta">
+        ${isNew ? '<span class="badge-new">Nueva</span>' : ''}
+        <a class="btn-view" href="${j.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">Ver →</a>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+
+init();
+</script>
+</body>
+</html>
