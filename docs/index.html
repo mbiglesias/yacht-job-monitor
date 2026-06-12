@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yacht Engineer Jobs</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
+
+:root{
+  --navy:#0a2540;--navy2:#0f3460;--blue:#1a56db;--sea:#0ea5e9;
+  --light:#f0f7ff;--border:#dbeafe;--text:#0f172a;--muted:#64748b;
+  --bg:#f1f5f9;--white:#fff;--green:#059669;
+  --tag-bg:#eff6ff;--tag-fg:#1d4ed8;--tag-br:#bfdbfe;
+  --radius:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+
+/* ── LOCK ────────────────────────────────────── */
+#lock{position:fixed;inset:0;z-index:999;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.lock-box{background:#0f1e35;border:1px solid rgba(14,165,233,.25);
+  border-radius:20px;padding:36px 28px;width:100%;max-width:340px;text-align:center}
+.lock-box .icon{font-size:40px;margin-bottom:14px}
+.lock-box h2{color:#fff;font-family:'Syne',sans-serif;font-size:22px;
+  font-weight:800;margin-bottom:6px}
+.lock-box p{color:#64748b;font-size:13px;margin-bottom:22px}
+.lock-input{width:100%;background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:13px 16px;color:#fff;font-size:16px;text-align:center;
+  letter-spacing:.12em;outline:none;font-family:'Inter',sans-serif;
+  margin-bottom:10px;transition:border-color .2s;-webkit-appearance:none}
+.lock-input:focus{border-color:var(--sea)}
+.lock-btn{width:100%;background:var(--sea);color:#fff;border:none;
+  border-radius:10px;padding:13px;font-size:15px;font-weight:600;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.lock-btn:active{background:#0284c7}
+.lock-err{color:#f87171;font-size:12px;margin-top:8px;min-height:16px}
+#app{display:none}
+
+/* ── HEADER ──────────────────────────────────── */
+.topbar{background:var(--navy);position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.topbar-logo-row{display:flex;align-items:center;gap:10px;
+  padding:10px 16px 0;max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.logo-ico{width:32px;height:32px;background:rgba(14,165,233,.15);
+  border:1.5px solid rgba(14,165,233,.3);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:16px}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;
+  color:#fff;line-height:1;white-space:nowrap}
+.logo-text h1 span{color:var(--sea)}
+.logo-text small{font-size:10px;color:#64748b;display:block;margin-top:2px;white-space:nowrap}
+/* Search row — always below logo on mobile */
+.topbar-search{padding:8px 16px 10px;max-width:900px;margin:0 auto}
+.search-wrap{position:relative}
+.search-wrap input{width:100%;background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.12);border-radius:9px;
+  padding:9px 12px 9px 34px;color:#fff;font-size:14px;
+  font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none;
+  -webkit-tap-highlight-color:transparent;box-sizing:border-box}
+.search-wrap input::placeholder{color:#64748b}
+.search-wrap input:focus{border-color:var(--sea)}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  color:#64748b;font-size:13px;pointer-events:none}
+
+/* ── FILTER PILLS ────────────────────────────── */
+.pills-bar{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pills-bar::-webkit-scrollbar{display:none}
+.pills-inner{display:flex;gap:6px;padding:0 16px 10px;width:max-content;min-width:100%}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;
+  border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);color:#94a3b8;
+  font-size:12px;font-weight:500;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent}
+.pill.active{background:var(--sea);border-color:var(--sea);color:#fff}
+
+/* ── STATS ───────────────────────────────────── */
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 16px;max-width:900px;margin:0 auto}
+.stat{font-size:12px;color:var(--muted)}
+.stat strong{color:var(--text);font-weight:600}
+.divider{color:#cbd5e1;font-size:11px}
+.ts{margin-left:auto;font-size:11px;color:var(--muted);
+  display:flex;align-items:center;gap:5px}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+/* ── MAIN LAYOUT ─────────────────────────────── */
+.content{max-width:900px;margin:0 auto;padding:12px 16px 60px;
+  display:grid;grid-template-columns:1fr;gap:12px}
+
+/* Sidebar — colapsable en mobile */
+.sidebar-toggle{display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--navy2)}
+.sidebar-toggle .arrow{transition:transform .2s;font-size:11px;color:var(--muted)}
+.sidebar-toggle.open .arrow{transform:rotate(180deg)}
+.sidebar-body{display:none;background:var(--white);
+  border:1px solid var(--border);border-top:none;
+  border-radius:0 0 var(--radius) var(--radius);padding:12px 16px}
+.sidebar-body.open{display:block}
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
+.src-item{display:flex;align-items:center;justify-content:space-between;
+  padding:4px 0}
+.src-label{font-size:12px;color:var(--text);display:flex;
+  align-items:center;gap:6px;cursor:pointer}
+.src-label input{accent-color:var(--blue);cursor:pointer;flex-shrink:0}
+.src-count{font-size:10px;font-weight:600;background:var(--tag-bg);
+  color:var(--tag-fg);border:1px solid var(--tag-br);
+  border-radius:10px;padding:1px 6px;min-width:20px;text-align:center}
+
+/* ── JOB CARDS ───────────────────────────────── */
+.jobs-header{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px}
+.jobs-count{font-size:12px;color:var(--muted)}
+.jobs-count strong{color:var(--text)}
+.sort-sel{font-size:11px;border:1px solid var(--border);border-radius:6px;
+  padding:4px 8px;background:var(--white);color:var(--muted);
+  cursor:pointer;outline:none;-webkit-appearance:none}
+#list{display:flex;flex-direction:column;gap:8px}
+
+.card{background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;display:flex;gap:10px;
+  text-decoration:none;color:inherit;
+  transition:box-shadow .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent}
+.card:active{background:#fafcff}
+.card.is-new{border-left:3px solid var(--sea)}
+.card-ico{width:38px;height:38px;border-radius:8px;background:var(--light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--navy2);
+  border:1px solid var(--border);flex-shrink:0}
+.card-body{flex:1;min-width:0}
+.card-title{font-size:14px;font-weight:600;color:var(--navy);
+  margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-src{font-size:11px;color:var(--muted);margin-bottom:7px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
+.tag.eng{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.tag.rot{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.tag.dat{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.tag.sal{background:#fefce8;color:#a16207;border:1px solid #fde68a}
+.tag.pub{background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe}
+.tag.wrn{background:#f8fafc;color:#94a3b8;border:1px solid #e2e8f0}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;
+  justify-content:space-between;gap:8px;flex-shrink:0}
+.badge-new{font-size:9px;font-weight:700;background:var(--sea);
+  color:#fff;border-radius:4px;padding:2px 6px;
+  text-transform:uppercase;letter-spacing:.05em}
+.btn-ver{background:var(--navy2);color:#fff;padding:7px 14px;
+  border-radius:8px;font-size:12px;font-weight:600;
+  text-decoration:none;white-space:nowrap;display:inline-block;
+  transition:background .15s}
+.btn-ver:active{background:var(--blue)}
+
+/* ── EMPTY ───────────────────────────────────── */
+#empty{display:none;text-align:center;padding:40px 20px;color:var(--muted)}
+#empty .ei{font-size:40px;margin-bottom:10px}
+#empty p{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+#empty small{font-size:12px}
+
+/* ── DESKTOP ─────────────────────────────────── */
+@media(min-width:680px){
+  .content{grid-template-columns:200px 1fr;align-items:start}
+  .sidebar-toggle{display:none}
+  .sidebar-body{display:block!important;border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;position:sticky;top:72px}
+  .src-grid{grid-template-columns:1fr}
+  .card:hover{box-shadow:0 4px 16px rgba(10,37,64,.08);border-color:#bfdbfe}
+  .topbar-logo-row{padding-bottom:10px;display:flex;align-items:center;gap:16px}
+  .topbar-search{display:none}
+  /* Inject search inline — handled by JS repositionSearch() */
+}
+</style>
+<script>
+window.JOBS_DATA = [
+  {
+    "title": "Chief or Second Engineer 3000 KW CoC",
+    "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-or-second-engineer-3000-kw-coc",
+    "source": "Bluewater Yachting",
+    "tags": [
+      "⚙️ Engineer"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "5 years as C/E or 2nd Engineer",
+    "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#5-years-as-c-e-or-2nd-engineer",
+    "source": "Bluewater Yachting",
+    "tags": [
+      "⚙️ Engineer"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "CHIEF ENGINEER",
+    "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
+    "source": "Saltwater Recruitment",
+    "tags": [
+      "⚙️ Engineer"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "Chief Engineer 40m New Build",
+    "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-new-build",
+    "source": "Saltwater Recruitment",
+    "tags": [
+      "⚙️ Engineer",
+      "🔄 Rotation"
+    ],
+    "warnings": [
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "Chief Engineer 45m+ MY",
+    "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-45m-my",
+    "source": "Saltwater Recruitment",
+    "tags": [
+      "⚙️ Engineer"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "Chief Engineer",
+    "url": "https://www.faststream.com/jobs/superyacht-jobs/?department=engineering#chief-engineer",
+    "source": "Faststream",
+    "tags": [
+      "⚙️ Engineer",
+      "💶 ~6,500€/mes"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "Engineer Jobs",
+    "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
+    "source": "My Crew Kit",
+    "tags": [
+      "⚙️ Engineer"
+    ],
+    "warnings": [
+      "⚠️ Rotación no mencionada",
+      "⚠️ Fecha de inicio no especificada",
+      "⚠️ Salario no especificado"
+    ],
+    "posted": null,
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "Chief Engineer",
+    "url": "https://bespokecrew.com/jobs/chief-engineer/",
+    "source": "Bespoke Crew",
+    "tags": [
+      "⚙️ Engineer",
+      "🔄 Rotation",
+      "📅 Inicio ~2 meses",
+      "💶 ~6,500€/mes"
+    ],
+    "warnings": [],
+    "posted": "10 Jun 2026",
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  },
+  {
+    "title": "2nd Engineer",
+    "url": "https://bespokecrew.com/jobs/2nd-engineer/",
+    "source": "Bespoke Crew",
+    "tags": [
+      "⚙️ Engineer",
+      "🔄 Rotation",
+      "📅 Inicio ~2 meses",
+      "💶 ~6,500€/mes"
+    ],
+    "warnings": [],
+    "posted": "10 Jun 2026",
+    "seen_at": "2026-06-12T20:19:49.029713Z"
+  }
+];
+window.GENERATED_AT = "2026-06-12T20:19:49.029713Z";
+window.PASSWORD_HASH = "7ee9f8c6c57d6874984bb87dc20ee2ab96c5886e9051273641c1dcd1701c90b0";
+</script>
+</head>
+<body>
+
+<!-- LOCK -->
+<div id="lock">
+  <div class="lock-box">
+    <div class="icon">⚙️</div>
+    <h2>Yacht Engineer Jobs</h2>
+    <p>Ingresá la contraseña para acceder</p>
+    <input class="lock-input" type="password" id="pw"
+      placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="lock-btn" onclick="tryLogin()">Entrar →</button>
+    <div class="lock-err" id="pw-err"></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+
+<div class="topbar">
+  <div class="topbar-logo-row" id="topbar-logo-row">
+    <div class="logo">
+      <div class="logo-ico">⚙️</div>
+      <div class="logo-text">
+        <h1>Yacht Engineer <span>Jobs</span></h1>
+        <small>Engineer · Rotation · ≥6K€ · ~2 meses</small>
+      </div>
+    </div>
+  </div>
+  <div class="topbar-search" id="topbar-search-row">
+    <div class="search-wrap">
+      <span class="search-ico">🔍</span>
+      <input type="search" id="search" placeholder="Buscar por título, fuente, salario…" oninput="render()">
+    </div>
+  </div>
+</div>
+
+<div class="pills-bar">
+  <div class="pills-inner">
+    <div class="pill active" onclick="setF('all',this)">● Todos</div>
+    <div class="pill" onclick="setF('rotation',this)">🔄 Rotation</div>
+    <div class="pill" onclick="setF('salary',this)">💶 Con salario</div>
+    <div class="pill" onclick="setF('date',this)">📅 Fecha ok</div>
+    <div class="pill" onclick="setF('15days',this)">🕐 Últimos 15 días</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><strong id="cnt-t">0</strong> ofertas</div>
+  <div class="divider">·</div>
+  <div class="stat"><strong id="cnt-s">0</strong> fuentes</div>
+  <div class="divider">·</div>
+  <div class="stat"><strong id="cnt-sal">0</strong> con salario</div>
+  <div class="ts"><div class="pulse"></div><span id="ts">—</span></div>
+</div>
+
+<div class="content">
+
+  <!-- SIDEBAR -->
+  <div>
+    <div class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()">
+      Fuentes &amp; filtros <span class="arrow">▼</span>
+    </div>
+    <div class="sidebar-body" id="sb-body">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Fuentes</div>
+      <div class="src-grid" id="src-list"></div>
+      <div style="margin-top:14px;font-size:10px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Criterios</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
+        ⚙️ Engineer / ETO<br>
+        🔄 Con rotación<br>
+        🚫 Descarta permanent<br>
+        📅 Inicio ~2 meses<br>
+        💶 Salario ≥ 6.000€/mes<br>
+        🚢 Solo yates<br>
+        <span style="color:#cbd5e1">17 fuentes · 2× al día</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- JOBS -->
+  <div>
+    <div class="jobs-header">
+      <div class="jobs-count">Mostrando <strong id="cnt-v">0</strong></div>
+      <select class="sort-sel" onchange="sortBy=this.value;render()">
+        <option value="">Por defecto</option>
+        <option value="salary">Mayor salario</option>
+        <option value="source">Por fuente</option>
+      </select>
+    </div>
+    <div id="list"></div>
+    <div id="empty">
+      <div class="ei">📭</div>
+      <p>Sin resultados</p>
+      <small>Probá quitando algún filtro</small>
+    </div>
+  </div>
+
+</div>
+</div><!-- /app -->
+
+<script>
+const ICONS={
+  "Yotspot":"YS","Crew Network":"CN","Bluewater Yachting":"BW",
+  "Find a Crew":"FC","YaCrew":"YC","Saltwater Recruitment":"SW",
+  "Crewin":"CR","Faststream":"FS","YPI Crew":"YP","My Crew Kit":"MC",
+  "Bespoke Crew":"BC","Wilsonhalligan":"WH","Quay Crew":"QC",
+  "Northrop & Johnson":"NJ","Xelvin":"XV",
+  "Telegram: SeamenJob":"TG","Telegram: MarinePublic":"TG","LinkedIn":"LI"
+};
+
+let _jobs=[], filter='all', sortBy='', hiddenSrc=new Set(), _ready=false;
+const PW=window.PASSWORD_HASH||'';
+
+// ── SEARCH POSITION ───────────────────────────────────────────────────────────
+// On desktop: move search wrap into logo row inline
+// On mobile: keep it in its own row
+function repositionSearch() {
+  const isDesktop = window.innerWidth >= 680;
+  const logoRow   = document.getElementById('topbar-logo-row');
+  const searchRow = document.getElementById('topbar-search-row');
+  const searchWrap = searchRow.querySelector('.search-wrap');
+
+  if (isDesktop) {
+    // Move search into logo row if not already there
+    if (!logoRow.contains(searchWrap)) {
+      searchWrap.style.flex = '1';
+      logoRow.appendChild(searchWrap);
+      searchRow.style.display = 'none';
+    }
+  } else {
+    // Move search back into its row if not already there
+    if (!searchRow.contains(searchWrap)) {
+      searchWrap.style.flex = '';
+      searchRow.appendChild(searchWrap);
+      searchRow.style.display = '';
+    }
+  }
+}
+window.addEventListener('resize', repositionSearch);
+repositionSearch();
+async function sha256(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
+}
+async function tryLogin(){
+  const v=document.getElementById('pw').value.trim();
+  const e=document.getElementById('pw-err');
+  if(!v){e.textContent='Ingresá la contraseña';return}
+  if(!PW||await sha256(v)===PW){
+    sessionStorage.setItem('ya',PW||'open');
+    show();
+  }else{
+    e.textContent='Contraseña incorrecta';
+    document.getElementById('pw').value='';
+    await new Promise(r=>setTimeout(r,600));
+    e.textContent='';
+  }
+}
+function show(){
+  document.getElementById('lock').style.display='none';
+  document.getElementById('app').style.display='block';
+  if(!_ready){_ready=true;loadData();}
+}
+(()=>{
+  const s=sessionStorage.getItem('ya');
+  if(!PW||s===(PW||'open')) show();
+})();
+
+// ── SIDEBAR TOGGLE (mobile) ───────────────────────────────────────────────────
+function toggleSidebar(){
+  const t=document.getElementById('sb-toggle');
+  const b=document.getElementById('sb-body');
+  t.classList.toggle('open');
+  b.classList.toggle('open');
+}
+
+// ── DATA ──────────────────────────────────────────────────────────────────────
+async function loadData(){
+  let jobs=[], gen=null;
+  if(window.JOBS_DATA&&window.JOBS_DATA.length){
+    jobs=window.JOBS_DATA; gen=window.GENERATED_AT;
+  } else {
+    try{
+      const r=await fetch('jobs.json?t='+Date.now());
+      if(r.ok){const d=await r.json();jobs=d.jobs||[];gen=d.generated_at;}
+    }catch(e){console.warn(e)}
+  }
+  _jobs=jobs;
+
+  // Timestamp
+  if(gen){
+    const d=new Date(gen);
+    document.getElementById('ts').textContent=
+      'Actualizado '+d.toLocaleDateString('es-UY',{day:'numeric',month:'short'})+
+      ' '+d.toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'});
+  }
+
+  // Stats
+  document.getElementById('cnt-t').textContent=jobs.length;
+  const sal=jobs.filter(j=>(j.tags||[]).some(t=>t.includes('€'))).length;
+  document.getElementById('cnt-sal').textContent=sal;
+
+  // Sources
+  const srcs={};
+  jobs.forEach(j=>{srcs[j.source]=(srcs[j.source]||0)+1;});
+  document.getElementById('cnt-s').textContent=Object.keys(srcs).length;
+  const el=document.getElementById('src-list');
+  el.innerHTML='';
+  Object.entries(srcs).sort((a,b)=>b[1]-a[1]).forEach(([src,n])=>{
+    const d=document.createElement('div');
+    d.className='src-item';
+    const safe=src.replace(/'/g,"\\'");
+    d.innerHTML=`<label class="src-label">
+      <input type="checkbox" checked onchange="toggleSrc('${safe}')"> ${src}
+    </label><span class="src-count">${n}</span>`;
+    el.appendChild(d);
+  });
+
+  render();
+}
+
+// ── FILTERS ───────────────────────────────────────────────────────────────────
+function setF(f,el){
+  filter=f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+function toggleSrc(src){
+  if(hiddenSrc.has(src))hiddenSrc.delete(src);
+  else hiddenSrc.add(src);
+  render();
+}
+
+// ── RENDER ────────────────────────────────────────────────────────────────────
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let jobs=[..._jobs];
+
+  if(hiddenSrc.size) jobs=jobs.filter(j=>!hiddenSrc.has(j.source));
+
+  const has=t=>j=>(j.tags||[]).join(' ').includes(t);
+  if(filter==='rotation') jobs=jobs.filter(has('🔄'));
+  else if(filter==='salary') jobs=jobs.filter(has('€'));
+  else if(filter==='date') jobs=jobs.filter(has('📅'));
+  else if(filter==='15days'){
+    const cut=Date.now()-15*864e5;
+    jobs=jobs.filter(j=>j.seen_at&&new Date(j.seen_at)>cut);
+  }
+
+  if(q) jobs=jobs.filter(j=>
+    j.title.toLowerCase().includes(q)||
+    j.source.toLowerCase().includes(q)||
+    (j.tags||[]).join(' ').toLowerCase().includes(q)
+  );
+
+  if(sortBy==='salary') jobs.sort((a,b)=>{
+    const g=j=>parseInt(((j.tags||[]).find(t=>t.includes('€'))||'').replace(/[^\d]/g,''))||0;
+    return g(b)-g(a);
+  });
+  else if(sortBy==='source') jobs.sort((a,b)=>a.source.localeCompare(b.source));
+
+  const list=document.getElementById('list');
+  const empty=document.getElementById('empty');
+  list.innerHTML='';
+  document.getElementById('cnt-v').textContent=jobs.length;
+
+  if(!jobs.length){empty.style.display='block';return;}
+  empty.style.display='none';
+
+  const now=Date.now();
+  jobs.forEach(j=>{
+    const isNew=j.seen_at&&(now-new Date(j.seen_at))<864e5;
+    const ico=ICONS[j.source]||j.source.substring(0,2).toUpperCase();
+    let url=j.url||'#';
+    if(url!=='#'&&!url.startsWith('http')) url='https://'+url;
+
+    const tagHtml=(j.tags||[]).map(t=>{
+      let c='tag';
+      if(t.includes('⚙️'))c+=' eng';
+      else if(t.includes('🔄'))c+=' rot';
+      else if(t.includes('📅'))c+=' dat';
+      else if(t.includes('€'))c+=' sal';
+      return`<span class="${c}">${t}</span>`;
+    }).join('');
+    const warnHtml=(j.warnings||[]).map(w=>`<span class="tag wrn">${w}</span>`).join('');
+    const postedHtml=j.posted?`<span class="tag pub">📆 ${j.posted}</span>`:'';
+
+    const card=document.createElement('a');
+    card.className='card'+(isNew?' is-new':'');
+    card.href=url;
+    card.target='_blank';
+    card.rel='noopener noreferrer';
+    card.innerHTML=`
+      <div class="card-ico">${ico}</div>
+      <div class="card-body">
+        <div class="card-title">${j.title}</div>
+        <div class="card-src">${j.source}</div>
+        <div class="card-tags">${tagHtml}${warnHtml}${postedHtml}</div>
+      </div>
+      <div class="card-right">
+        ${isNew?'<span class="badge-new">Nueva</span>':'<span></span>'}
+        <a class="btn-ver" href="${url}" target="_blank" rel="noopener noreferrer"
+           onclick="event.stopPropagation()">Ver →</a>
+      </div>`;
+    list.appendChild(card);
+  });
+}
+</script>
+</body>
+</html>
