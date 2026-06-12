@@ -5,109 +5,175 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Yacht Engineer Jobs</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Syne:wght@700;800&display=swap');
 
-:root {
-  --navy:#0a2540; --navy2:#0f3460; --blue:#1a56db; --sea:#0ea5e9;
-  --light:#f0f7ff; --border:#dbeafe; --text:#0f172a; --muted:#64748b;
-  --bg:#f8fafc; --white:#fff; --green:#059669; --green-bg:#ecfdf5;
-  --tag-bg:#eff6ff; --tag-fg:#1d4ed8; --tag-br:#bfdbfe;
+:root{
+  --navy:#0a2540;--navy2:#0f3460;--blue:#1a56db;--sea:#0ea5e9;
+  --light:#f0f7ff;--border:#dbeafe;--text:#0f172a;--muted:#64748b;
+  --bg:#f1f5f9;--white:#fff;--green:#059669;
+  --tag-bg:#eff6ff;--tag-fg:#1d4ed8;--tag-br:#bfdbfe;
+  --radius:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.5;min-height:100vh}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
 
-/* ── LOCK ── */
-#lock-screen{position:fixed;inset:0;z-index:9999;background:#0a2540;display:flex;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
-.lock-box{background:#0f1e35;border:1px solid rgba(14,165,233,.2);border-radius:16px;padding:40px 36px;width:100%;max-width:360px;text-align:center}
-.lock-icon{font-size:36px;margin-bottom:16px}
-.lock-box h2{color:#fff;font-family:'Syne',sans-serif;font-size:20px;font-weight:800;margin-bottom:6px}
-.lock-box p{color:#64748b;font-size:13px;margin-bottom:24px}
-.lock-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:8px;padding:11px 14px;color:#fff;font-size:15px;font-family:'Inter',sans-serif;outline:none;text-align:center;letter-spacing:.1em;transition:border-color .2s;margin-bottom:12px}
-.lock-input:focus{border-color:#0ea5e9}
-.lock-btn{width:100%;background:#0ea5e9;color:#fff;border:none;border-radius:8px;padding:11px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
-.lock-btn:hover{background:#0284c7}
-.lock-error{color:#f87171;font-size:12px;margin-top:10px;min-height:18px}
+/* ── LOCK ────────────────────────────────────── */
+#lock{position:fixed;inset:0;z-index:999;background:var(--navy);
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.lock-box{background:#0f1e35;border:1px solid rgba(14,165,233,.25);
+  border-radius:20px;padding:36px 28px;width:100%;max-width:340px;text-align:center}
+.lock-box .icon{font-size:40px;margin-bottom:14px}
+.lock-box h2{color:#fff;font-family:'Syne',sans-serif;font-size:22px;
+  font-weight:800;margin-bottom:6px}
+.lock-box p{color:#64748b;font-size:13px;margin-bottom:22px}
+.lock-input{width:100%;background:rgba(255,255,255,.06);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:10px;
+  padding:13px 16px;color:#fff;font-size:16px;text-align:center;
+  letter-spacing:.12em;outline:none;font-family:'Inter',sans-serif;
+  margin-bottom:10px;transition:border-color .2s;-webkit-appearance:none}
+.lock-input:focus{border-color:var(--sea)}
+.lock-btn{width:100%;background:var(--sea);color:#fff;border:none;
+  border-radius:10px;padding:13px;font-size:15px;font-weight:600;
+  cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s}
+.lock-btn:active{background:#0284c7}
+.lock-err{color:#f87171;font-size:12px;margin-top:8px;min-height:16px}
 #app{display:none}
 
-/* ── HEADER ── */
-header{background:var(--navy);position:sticky;top:0;z-index:100;box-shadow:0 2px 16px rgba(0,0,0,.25)}
-.header-inner{max-width:1100px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.logo-icon{width:36px;height:36px;background:rgba(14,165,233,.15);border:1.5px solid rgba(14,165,233,.3);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:18px}
-.logo h1{font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:#fff;line-height:1.1}
-.logo h1 span{color:var(--sea)}
-.logo small{display:block;font-size:10px;font-weight:400;color:#64748b;font-family:'Inter',sans-serif}
-.search-wrap{flex:1;min-width:160px;position:relative}
-.search-wrap input{width:100%;background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.12);border-radius:8px;padding:8px 12px 8px 34px;color:#fff;font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+/* ── HEADER ──────────────────────────────────── */
+.topbar{background:var(--navy);position:sticky;top:0;z-index:100;
+  box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.topbar-inner{display:flex;align-items:center;gap:12px;
+  padding:12px 16px;max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none}
+.logo-ico{width:34px;height:34px;background:rgba(14,165,233,.15);
+  border:1.5px solid rgba(14,165,233,.3);border-radius:9px;
+  display:flex;align-items:center;justify-content:center;font-size:17px}
+.logo-text h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
+  color:#fff;line-height:1}
+.logo-text h1 span{color:var(--sea)}
+.logo-text small{font-size:10px;color:#475569;display:block;margin-top:2px}
+.search-wrap{flex:1;position:relative;min-width:0}
+.search-wrap input{width:100%;background:rgba(255,255,255,.08);
+  border:1.5px solid rgba(255,255,255,.1);border-radius:9px;
+  padding:9px 12px 9px 32px;color:#fff;font-size:13px;
+  font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none}
 .search-wrap input::placeholder{color:#475569}
 .search-wrap input:focus{border-color:var(--sea)}
-.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:#475569;font-size:13px;pointer-events:none}
-.pills{display:flex;gap:5px;flex-wrap:wrap}
-.pill{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:20px;border:1.5px solid rgba(255,255,255,.12);background:rgba(255,255,255,.05);color:#94a3b8;font-size:11px;font-weight:500;cursor:pointer;transition:all .15s;white-space:nowrap}
-.pill:hover{border-color:rgba(255,255,255,.25);color:#fff}
+.search-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:#475569;font-size:12px;pointer-events:none}
+.filter-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);
+  border-radius:9px;padding:9px 12px;color:#94a3b8;font-size:12px;
+  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;
+  transition:all .15s;flex-shrink:0}
+.filter-btn:active{background:rgba(255,255,255,.15)}
+
+/* ── FILTER PILLS ────────────────────────────── */
+.pills-bar{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.pills-bar::-webkit-scrollbar{display:none}
+.pills-inner{display:flex;gap:6px;padding:8px 16px;
+  max-width:900px;margin:0 auto;width:max-content;min-width:100%}
+.pill{display:flex;align-items:center;gap:4px;padding:6px 12px;
+  border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.05);color:#94a3b8;
+  font-size:12px;font-weight:500;cursor:pointer;
+  transition:all .15s;white-space:nowrap;flex-shrink:0}
 .pill.active{background:var(--sea);border-color:var(--sea);color:#fff}
-.pill .dot{width:5px;height:5px;border-radius:50%;background:currentColor;opacity:.7}
 
-/* ── STATS ── */
-.stats-bar{max-width:1100px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-.stat{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted)}
+/* ── STATS ───────────────────────────────────── */
+.stats{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 16px;max-width:900px;margin:0 auto}
+.stat{font-size:12px;color:var(--muted)}
 .stat strong{color:var(--text);font-weight:600}
-.divider{color:#cbd5e1}
-.last-updated{margin-left:auto;font-size:11px;color:var(--muted);display:flex;align-items:center;gap:5px}
-.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.divider{color:#cbd5e1;font-size:11px}
+.ts{margin-left:auto;font-size:11px;color:var(--muted);
+  display:flex;align-items:center;gap:5px}
+.pulse{width:6px;height:6px;border-radius:50%;background:var(--green);
+  animation:pulse 2s infinite;flex-shrink:0}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
 
-/* ── LAYOUT ── */
-.main{max-width:1100px;margin:0 auto;padding:0 20px 48px;display:grid;grid-template-columns:200px 1fr;gap:20px;align-items:start}
+/* ── MAIN LAYOUT ─────────────────────────────── */
+.content{max-width:900px;margin:0 auto;padding:12px 16px 60px;
+  display:grid;grid-template-columns:1fr;gap:12px}
 
-/* ── SIDEBAR ── */
-.sidebar{position:sticky;top:65px}
-.sidebar-section{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:12px}
-.sidebar-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px}
-.source-item{display:flex;align-items:center;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f1f5f9}
-.source-item:last-child{border-bottom:none}
-.source-name{font-size:12px;color:var(--text);display:flex;align-items:center;gap:6px;cursor:pointer}
-.source-name input[type=checkbox]{accent-color:var(--blue);cursor:pointer}
-.source-count{font-size:10px;font-weight:600;background:var(--tag-bg);color:var(--tag-fg);border:1px solid var(--tag-br);border-radius:10px;padding:1px 6px;min-width:20px;text-align:center}
-.how-to{font-size:11px;color:var(--muted);line-height:1.8}
-.how-to a{color:var(--blue);text-decoration:none}
+/* Sidebar — colapsable en mobile */
+.sidebar-toggle{display:flex;align-items:center;justify-content:space-between;
+  background:var(--white);border:1px solid var(--border);border-radius:var(--radius);
+  padding:12px 16px;cursor:pointer;font-size:13px;font-weight:600;color:var(--navy2)}
+.sidebar-toggle .arrow{transition:transform .2s;font-size:11px;color:var(--muted)}
+.sidebar-toggle.open .arrow{transform:rotate(180deg)}
+.sidebar-body{display:none;background:var(--white);
+  border:1px solid var(--border);border-top:none;
+  border-radius:0 0 var(--radius) var(--radius);padding:12px 16px}
+.sidebar-body.open{display:block}
+.src-grid{display:grid;grid-template-columns:1fr 1fr;gap:4px 12px}
+.src-item{display:flex;align-items:center;justify-content:space-between;
+  padding:4px 0}
+.src-label{font-size:12px;color:var(--text);display:flex;
+  align-items:center;gap:6px;cursor:pointer}
+.src-label input{accent-color:var(--blue);cursor:pointer;flex-shrink:0}
+.src-count{font-size:10px;font-weight:600;background:var(--tag-bg);
+  color:var(--tag-fg);border:1px solid var(--tag-br);
+  border-radius:10px;padding:1px 6px;min-width:20px;text-align:center}
 
-/* ── JOBS ── */
-.jobs-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
-.jobs-count{font-size:13px;color:var(--muted)}
+/* ── JOB CARDS ───────────────────────────────── */
+.jobs-header{display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:8px}
+.jobs-count{font-size:12px;color:var(--muted)}
 .jobs-count strong{color:var(--text)}
-.sort-select{font-size:11px;border:1px solid var(--border);border-radius:6px;padding:4px 8px;background:var(--white);color:var(--muted);cursor:pointer;outline:none}
-#jobs-list{display:flex;flex-direction:column;gap:8px}
-.job-card{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:flex-start;gap:12px;transition:box-shadow .15s,border-color .15s;text-decoration:none;color:inherit}
-.job-card:hover{box-shadow:0 4px 16px rgba(10,37,64,.08);border-color:#bfdbfe}
-.job-card.new-today{border-left:3px solid var(--sea)}
-.src-avatar{width:36px;height:36px;border-radius:7px;background:var(--light);display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;border:1px solid var(--border);font-weight:700;color:var(--navy2)}
-.job-main{flex:1;min-width:0}
-.job-title{font-size:14px;font-weight:600;color:var(--navy);margin-bottom:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.job-source-label{font-size:11px;color:var(--muted);margin-bottom:6px}
-.job-tags{display:flex;flex-wrap:wrap;gap:4px}
-.tag{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
-.tag.engineer{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
-.tag.rotation{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
-.tag.date{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
-.tag.salary{background:#fefce8;color:#a16207;border:1px solid #fde68a}
-.tag.warn{background:#f8fafc;color:#94a3b8;border:1px solid #e2e8f0}
-.job-cta{flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:5px}
-.btn-view{background:var(--navy2);color:#fff;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap;transition:background .15s;display:inline-block}
-.btn-view:hover{background:var(--blue)}
-.badge-new{font-size:9px;font-weight:700;background:var(--sea);color:#fff;border-radius:4px;padding:2px 5px;letter-spacing:.04em;text-transform:uppercase}
+.sort-sel{font-size:11px;border:1px solid var(--border);border-radius:6px;
+  padding:4px 8px;background:var(--white);color:var(--muted);
+  cursor:pointer;outline:none;-webkit-appearance:none}
+#list{display:flex;flex-direction:column;gap:8px}
+
+.card{background:var(--white);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px;display:flex;gap:10px;
+  text-decoration:none;color:inherit;
+  transition:box-shadow .15s,border-color .15s;
+  -webkit-tap-highlight-color:transparent}
+.card:active{background:#fafcff}
+.card.is-new{border-left:3px solid var(--sea)}
+.card-ico{width:38px;height:38px;border-radius:8px;background:var(--light);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;color:var(--navy2);
+  border:1px solid var(--border);flex-shrink:0}
+.card-body{flex:1;min-width:0}
+.card-title{font-size:14px;font-weight:600;color:var(--navy);
+  margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-src{font-size:11px;color:var(--muted);margin-bottom:7px}
+.card-tags{display:flex;flex-wrap:wrap;gap:4px}
+.tag{display:inline-flex;align-items:center;gap:3px;
+  padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500}
+.tag.eng{background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+.tag.rot{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
+.tag.dat{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
+.tag.sal{background:#fefce8;color:#a16207;border:1px solid #fde68a}
+.tag.wrn{background:#f8fafc;color:#94a3b8;border:1px solid #e2e8f0}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;
+  justify-content:space-between;gap:8px;flex-shrink:0}
+.badge-new{font-size:9px;font-weight:700;background:var(--sea);
+  color:#fff;border-radius:4px;padding:2px 6px;
+  text-transform:uppercase;letter-spacing:.05em}
+.btn-ver{background:var(--navy2);color:#fff;padding:7px 14px;
+  border-radius:8px;font-size:12px;font-weight:600;
+  text-decoration:none;white-space:nowrap;display:inline-block;
+  transition:background .15s}
+.btn-ver:active{background:var(--blue)}
+
+/* ── EMPTY ───────────────────────────────────── */
 #empty{display:none;text-align:center;padding:40px 20px;color:var(--muted)}
-#empty .ei{font-size:36px;margin-bottom:10px}
-#empty p{font-size:14px;font-weight:500;color:var(--text)}
+#empty .ei{font-size:40px;margin-bottom:10px}
+#empty p{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
 #empty small{font-size:12px}
 
-@media(max-width:700px){
-  .main{grid-template-columns:1fr}
-  .sidebar{position:static}
-  .header-inner{padding:10px 14px}
-  .pills{display:none}
-  .main{padding:0 14px 32px}
-  .stats-bar{padding:8px 14px}
+/* ── DESKTOP ─────────────────────────────────── */
+@media(min-width:680px){
+  .content{grid-template-columns:200px 1fr;align-items:start}
+  .sidebar-toggle{display:none}
+  .sidebar-body{display:block!important;border:1px solid var(--border);
+    border-radius:var(--radius);padding:14px;position:sticky;top:80px}
+  .src-grid{grid-template-columns:1fr}
+  .card:hover{box-shadow:0 4px 16px rgba(10,37,64,.08);border-color:#bfdbfe}
 }
 </style>
 
@@ -138,101 +204,138 @@ window.JOBS_DATA = [
       "⚠️ Fecha de inicio no especificada",
       "⚠️ Salario no especificado"
     ]
+  },
+  {
+    "title": "Chief Engineer",
+    "url": "https://bespokecrew.com/jobs/chief-engineer/",
+    "source": "Bespoke Crew",
+    "tags": [
+      "⚙️ Engineer",
+      "🔄 Rotation",
+      "📅 Inicio ~2 meses",
+      "💶 ~6,500€/mes"
+    ],
+    "warnings": []
+  },
+  {
+    "title": "2nd Engineer",
+    "url": "https://bespokecrew.com/jobs/2nd-engineer/",
+    "source": "Bespoke Crew",
+    "tags": [
+      "⚙️ Engineer",
+      "🔄 Rotation",
+      "📅 Inicio ~2 meses",
+      "💶 ~6,500€/mes"
+    ],
+    "warnings": []
   }
 ];
-window.GENERATED_AT = "2026-06-12T17:39:36.944340Z";
+window.GENERATED_AT = "2026-06-12T17:47:02.336249Z";
 window.PASSWORD_HASH = "7ee9f8c6c57d6874984bb87dc20ee2ab96c5886e9051273641c1dcd1701c90b0";
 </script>
 
 </head>
 <body>
 
-<div id="lock-screen">
+<!-- LOCK -->
+<div id="lock">
   <div class="lock-box">
-    <div class="lock-icon">⚙️</div>
+    <div class="icon">⚙️</div>
     <h2>Yacht Engineer Jobs</h2>
     <p>Ingresá la contraseña para acceder</p>
-    <input class="lock-input" type="password" id="pw-input" placeholder="••••••••"
-           onkeydown="if(event.key==='Enter')checkPassword()">
-    <button class="lock-btn" onclick="checkPassword()">Entrar →</button>
-    <div class="lock-error" id="pw-error"></div>
+    <input class="lock-input" type="password" id="pw"
+      placeholder="••••••••" onkeydown="if(event.key==='Enter')tryLogin()">
+    <button class="lock-btn" onclick="tryLogin()">Entrar →</button>
+    <div class="lock-err" id="pw-err"></div>
   </div>
 </div>
 
+<!-- APP -->
 <div id="app">
-<header>
-  <div class="header-inner">
+
+<div class="topbar">
+  <div class="topbar-inner">
     <div class="logo">
-      <div class="logo-icon">⚙️</div>
-      <div>
+      <div class="logo-ico">⚙️</div>
+      <div class="logo-text">
         <h1>Yacht Engineer <span>Jobs</span></h1>
-        <small>Engineer · Rotation · ≥6.000€ · ~2 meses</small>
+        <small>Engineer · Rotation · ≥6K€ · ~2 meses</small>
       </div>
     </div>
     <div class="search-wrap">
-      <span class="search-icon">🔍</span>
-      <input type="text" id="search" placeholder="Buscar título, fuente…" oninput="renderJobs()">
-    </div>
-    <div class="pills">
-      <div class="pill active" onclick="setFilter('all',this)"><span class="dot"></span> Todos</div>
-      <div class="pill" onclick="setFilter('rotation',this)">🔄 Rotation</div>
-      <div class="pill" onclick="setFilter('salary',this)">💶 Con salario</div>
-      <div class="pill" onclick="setFilter('date',this)">📅 Fecha ok</div>
-      <div class="pill" onclick="setFilter('15days',this)">🕐 Últimos 15 días</div>
+      <span class="search-ico">🔍</span>
+      <input type="search" id="search" placeholder="Buscar…" oninput="render()">
     </div>
   </div>
-</header>
-
-<div class="stats-bar">
-  <div class="stat"><strong id="cnt-total">0</strong>&nbsp;ofertas</div>
-  <div class="divider">·</div>
-  <div class="stat"><strong id="cnt-sources">0</strong>&nbsp;fuentes</div>
-  <div class="divider">·</div>
-  <div class="stat"><strong id="cnt-salary">0</strong>&nbsp;con salario</div>
-  <div class="last-updated"><div class="pulse"></div><span id="updated-at">—</span></div>
 </div>
 
-<div class="main">
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <div class="sidebar-title">Fuentes</div>
-      <div id="source-list"></div>
+<div class="pills-bar">
+  <div class="pills-inner">
+    <div class="pill active" onclick="setF('all',this)">● Todos</div>
+    <div class="pill" onclick="setF('rotation',this)">🔄 Rotation</div>
+    <div class="pill" onclick="setF('salary',this)">💶 Con salario</div>
+    <div class="pill" onclick="setF('date',this)">📅 Fecha ok</div>
+    <div class="pill" onclick="setF('15days',this)">🕐 Últimos 15 días</div>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><strong id="cnt-t">0</strong> ofertas</div>
+  <div class="divider">·</div>
+  <div class="stat"><strong id="cnt-s">0</strong> fuentes</div>
+  <div class="divider">·</div>
+  <div class="stat"><strong id="cnt-sal">0</strong> con salario</div>
+  <div class="ts"><div class="pulse"></div><span id="ts">—</span></div>
+</div>
+
+<div class="content">
+
+  <!-- SIDEBAR -->
+  <div>
+    <div class="sidebar-toggle" id="sb-toggle" onclick="toggleSidebar()">
+      Fuentes &amp; filtros <span class="arrow">▼</span>
     </div>
-    <div class="sidebar-section">
-      <div class="sidebar-title">Criterios activos</div>
-      <div class="how-to">
+    <div class="sidebar-body" id="sb-body">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Fuentes</div>
+      <div class="src-grid" id="src-list"></div>
+      <div style="margin-top:14px;font-size:10px;font-weight:700;text-transform:uppercase;
+        letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Criterios</div>
+      <div style="font-size:11px;color:var(--muted);line-height:1.9">
         ⚙️ Engineer / ETO<br>
         🔄 Con rotación<br>
-        🚫 Descarta "permanent"<br>
+        🚫 Descarta permanent<br>
         📅 Inicio ~2 meses<br>
         💶 Salario ≥ 6.000€/mes<br>
-        🚢 Solo yates<br><br>
-        17 fuentes · 2× al día
+        🚢 Solo yates<br>
+        <span style="color:#cbd5e1">17 fuentes · 2× al día</span>
       </div>
     </div>
-  </aside>
+  </div>
 
+  <!-- JOBS -->
   <div>
     <div class="jobs-header">
-      <div class="jobs-count">Mostrando <strong id="cnt-visible">0</strong> ofertas</div>
-      <select class="sort-select" onchange="currentSort=this.value;renderJobs()">
-        <option value="default">Orden por defecto</option>
+      <div class="jobs-count">Mostrando <strong id="cnt-v">0</strong></div>
+      <select class="sort-sel" onchange="sortBy=this.value;render()">
+        <option value="">Por defecto</option>
         <option value="salary">Mayor salario</option>
         <option value="source">Por fuente</option>
       </select>
     </div>
-    <div id="jobs-list"></div>
+    <div id="list"></div>
     <div id="empty">
       <div class="ei">📭</div>
-      <p>Sin resultados para ese filtro</p>
-      <small>Probá otro término o quitá filtros</small>
+      <p>Sin resultados</p>
+      <small>Probá quitando algún filtro</small>
     </div>
   </div>
+
 </div>
 </div><!-- /app -->
 
 <script>
-const SOURCE_ICONS = {
+const ICONS={
   "Yotspot":"YS","Crew Network":"CN","Bluewater Yachting":"BW",
   "Find a Crew":"FC","YaCrew":"YC","Saltwater Recruitment":"SW",
   "Crewin":"CR","Faststream":"FS","YPI Crew":"YP","My Crew Kit":"MC",
@@ -241,207 +344,172 @@ const SOURCE_ICONS = {
   "Telegram: SeamenJob":"TG","Telegram: MarinePublic":"TG","LinkedIn":"LI"
 };
 
-let activeFilter = 'all';
-let activeSources = new Set();
-let currentSort = 'default';
-let _jobs = [];
-let _initialized = false;
+let _jobs=[], filter='all', sortBy='', hiddenSrc=new Set(), _ready=false;
+const PW=window.PASSWORD_HASH||'';
 
-// ── PASSWORD ──────────────────────────────────────────────────────────────────
-const PW_HASH = window.PASSWORD_HASH || "";
-
-async function sha256(str) {
-  const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
+// ── AUTH ──────────────────────────────────────────────────────────────────────
+async function sha256(s){
+  const b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+  return Array.from(new Uint8Array(b)).map(x=>x.toString(16).padStart(2,'0')).join('');
 }
-
-async function checkPassword() {
-  const val = document.getElementById("pw-input").value;
-  const err = document.getElementById("pw-error");
-  if (!val) { err.textContent = "Ingresá la contraseña"; return; }
-  // Si no hay hash configurado, cualquier cosa pasa
-  if (!PW_HASH || await sha256(val) === PW_HASH) {
-    sessionStorage.setItem("yacht_auth", PW_HASH || "open");
-    unlock();
-  } else {
-    err.textContent = "Contraseña incorrecta";
-    document.getElementById("pw-input").value = "";
-    await new Promise(r => setTimeout(r, 600));
+async function tryLogin(){
+  const v=document.getElementById('pw').value.trim();
+  const e=document.getElementById('pw-err');
+  if(!v){e.textContent='Ingresá la contraseña';return}
+  if(!PW||await sha256(v)===PW){
+    sessionStorage.setItem('ya',PW||'open');
+    show();
+  }else{
+    e.textContent='Contraseña incorrecta';
+    document.getElementById('pw').value='';
+    await new Promise(r=>setTimeout(r,600));
+    e.textContent='';
   }
 }
-
-function unlock() {
-  document.getElementById("lock-screen").style.display = "none";
-  document.getElementById("app").style.display = "block";
-  if (!_initialized) { _initialized = true; loadAndInit(); }
+function show(){
+  document.getElementById('lock').style.display='none';
+  document.getElementById('app').style.display='block';
+  if(!_ready){_ready=true;loadData();}
 }
-
-// Auto-login en misma sesión
-(async () => {
-  const saved = sessionStorage.getItem("yacht_auth");
-  if (saved && (saved === (PW_HASH || "open") || !PW_HASH)) {
-    unlock();
-  } else if (!PW_HASH) {
-    // Sin contraseña configurada: acceso directo
-    unlock();
-  }
+(()=>{
+  const s=sessionStorage.getItem('ya');
+  if(!PW||s===(PW||'open')) show();
 })();
 
-// ── DATA LOADING ──────────────────────────────────────────────────────────────
-async function loadAndInit() {
-  let jobs = [], generatedAt = null;
+// ── SIDEBAR TOGGLE (mobile) ───────────────────────────────────────────────────
+function toggleSidebar(){
+  const t=document.getElementById('sb-toggle');
+  const b=document.getElementById('sb-body');
+  t.classList.toggle('open');
+  b.classList.toggle('open');
+}
 
-  if (window.JOBS_DATA && window.JOBS_DATA.length > 0) {
-    jobs = window.JOBS_DATA;
-    generatedAt = window.GENERATED_AT;
+// ── DATA ──────────────────────────────────────────────────────────────────────
+async function loadData(){
+  let jobs=[], gen=null;
+  if(window.JOBS_DATA&&window.JOBS_DATA.length){
+    jobs=window.JOBS_DATA; gen=window.GENERATED_AT;
   } else {
-    try {
-      const res = await fetch("jobs.json?t=" + Date.now());
-      if (res.ok) {
-        const data = await res.json();
-        jobs = data.jobs || [];
-        generatedAt = data.generated_at;
-      }
-    } catch(e) { console.warn("No se pudo cargar jobs.json:", e); }
+    try{
+      const r=await fetch('jobs.json?t='+Date.now());
+      if(r.ok){const d=await r.json();jobs=d.jobs||[];gen=d.generated_at;}
+    }catch(e){console.warn(e)}
   }
-
-  _jobs = jobs;
+  _jobs=jobs;
 
   // Timestamp
-  if (generatedAt) {
-    const d = new Date(generatedAt);
-    document.getElementById("updated-at").textContent =
-      "Actualizado " +
-      d.toLocaleDateString("es-UY",{day:"numeric",month:"short"}) + " " +
-      d.toLocaleTimeString("es-UY",{hour:"2-digit",minute:"2-digit"});
+  if(gen){
+    const d=new Date(gen);
+    document.getElementById('ts').textContent=
+      'Actualizado '+d.toLocaleDateString('es-UY',{day:'numeric',month:'short'})+
+      ' '+d.toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'});
   }
 
   // Stats
-  document.getElementById("cnt-total").textContent = jobs.length;
-  const withSalary = jobs.filter(j=>(j.tags||[]).some(t=>t.includes("€"))).length;
-  document.getElementById("cnt-salary").textContent = withSalary;
+  document.getElementById('cnt-t').textContent=jobs.length;
+  const sal=jobs.filter(j=>(j.tags||[]).some(t=>t.includes('€'))).length;
+  document.getElementById('cnt-sal').textContent=sal;
 
-  // Source list — una sola vez, sin duplicados
-  const sources = {};
-  jobs.forEach(j => { sources[j.source] = (sources[j.source]||0) + 1; });
-  document.getElementById("cnt-sources").textContent = Object.keys(sources).length;
-
-  const srcEl = document.getElementById("source-list");
-  srcEl.innerHTML = "";
-  Object.entries(sources).sort((a,b)=>b[1]-a[1]).forEach(([src, count]) => {
-    const div = document.createElement("div");
-    div.className = "source-item";
-    // Escapar comillas en el nombre de la fuente
-    const safeSource = src.replace(/'/g, "\\'");
-    div.innerHTML = `
-      <label class="source-name">
-        <input type="checkbox" checked onchange="toggleSource('${safeSource}')"> ${src}
-      </label>
-      <span class="source-count">${count}</span>`;
-    srcEl.appendChild(div);
+  // Sources
+  const srcs={};
+  jobs.forEach(j=>{srcs[j.source]=(srcs[j.source]||0)+1;});
+  document.getElementById('cnt-s').textContent=Object.keys(srcs).length;
+  const el=document.getElementById('src-list');
+  el.innerHTML='';
+  Object.entries(srcs).sort((a,b)=>b[1]-a[1]).forEach(([src,n])=>{
+    const d=document.createElement('div');
+    d.className='src-item';
+    const safe=src.replace(/'/g,"\\'");
+    d.innerHTML=`<label class="src-label">
+      <input type="checkbox" checked onchange="toggleSrc('${safe}')"> ${src}
+    </label><span class="src-count">${n}</span>`;
+    el.appendChild(d);
   });
 
-  renderJobs();
+  render();
 }
 
 // ── FILTERS ───────────────────────────────────────────────────────────────────
-function toggleSource(src) {
-  if (activeSources.has(src)) activeSources.delete(src);
-  else activeSources.add(src);
-  renderJobs();
+function setF(f,el){
+  filter=f;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  render();
 }
-
-function setFilter(f, el) {
-  activeFilter = f;
-  document.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-  el.classList.add("active");
-  renderJobs();
+function toggleSrc(src){
+  if(hiddenSrc.has(src))hiddenSrc.delete(src);
+  else hiddenSrc.add(src);
+  render();
 }
 
 // ── RENDER ────────────────────────────────────────────────────────────────────
-function renderJobs() {
-  const q = document.getElementById("search").value.toLowerCase();
-  let jobs = [..._jobs];
+function render(){
+  const q=document.getElementById('search').value.toLowerCase();
+  let jobs=[..._jobs];
 
-  // Source filter
-  if (activeSources.size > 0)
-    jobs = jobs.filter(j => !activeSources.has(j.source));
+  if(hiddenSrc.size) jobs=jobs.filter(j=>!hiddenSrc.has(j.source));
 
-  // Tag filters
-  const tags = t => (t.tags || []).join(" ");
-  if (activeFilter === "rotation")
-    jobs = jobs.filter(j => tags(j).includes("🔄"));
-  else if (activeFilter === "salary")
-    jobs = jobs.filter(j => tags(j).includes("€"));
-  else if (activeFilter === "date")
-    jobs = jobs.filter(j => tags(j).includes("📅"));
-  else if (activeFilter === "15days") {
-    const cutoff = Date.now() - 15 * 24 * 60 * 60 * 1000;
-    jobs = jobs.filter(j => j.seen_at && new Date(j.seen_at).getTime() > cutoff);
+  const has=t=>j=>(j.tags||[]).join(' ').includes(t);
+  if(filter==='rotation') jobs=jobs.filter(has('🔄'));
+  else if(filter==='salary') jobs=jobs.filter(has('€'));
+  else if(filter==='date') jobs=jobs.filter(has('📅'));
+  else if(filter==='15days'){
+    const cut=Date.now()-15*864e5;
+    jobs=jobs.filter(j=>j.seen_at&&new Date(j.seen_at)>cut);
   }
 
-  // Search
-  if (q) jobs = jobs.filter(j =>
-    j.title.toLowerCase().includes(q) ||
-    j.source.toLowerCase().includes(q) ||
-    (j.tags||[]).join(" ").toLowerCase().includes(q)
+  if(q) jobs=jobs.filter(j=>
+    j.title.toLowerCase().includes(q)||
+    j.source.toLowerCase().includes(q)||
+    (j.tags||[]).join(' ').toLowerCase().includes(q)
   );
 
-  // Sort
-  if (currentSort === "salary") {
-    jobs.sort((a,b) => {
-      const get = j => parseInt(((j.tags||[]).find(t=>t.includes("€"))||"").replace(/[^\d]/g,""))||0;
-      return get(b) - get(a);
-    });
-  } else if (currentSort === "source") {
-    jobs.sort((a,b) => a.source.localeCompare(b.source));
-  }
+  if(sortBy==='salary') jobs.sort((a,b)=>{
+    const g=j=>parseInt(((j.tags||[]).find(t=>t.includes('€'))||'').replace(/[^\d]/g,''))||0;
+    return g(b)-g(a);
+  });
+  else if(sortBy==='source') jobs.sort((a,b)=>a.source.localeCompare(b.source));
 
-  const list = document.getElementById("jobs-list");
-  const empty = document.getElementById("empty");
-  list.innerHTML = "";
-  document.getElementById("cnt-visible").textContent = jobs.length;
+  const list=document.getElementById('list');
+  const empty=document.getElementById('empty');
+  list.innerHTML='';
+  document.getElementById('cnt-v').textContent=jobs.length;
 
-  if (!jobs.length) { empty.style.display = "block"; return; }
-  empty.style.display = "none";
+  if(!jobs.length){empty.style.display='block';return;}
+  empty.style.display='none';
 
-  const now = Date.now();
-  jobs.forEach(j => {
-    const isNew = j.seen_at && (now - new Date(j.seen_at).getTime()) < 24*60*60*1000;
-    const icon = SOURCE_ICONS[j.source] || j.source.substring(0,2).toUpperCase();
+  const now=Date.now();
+  jobs.forEach(j=>{
+    const isNew=j.seen_at&&(now-new Date(j.seen_at))<864e5;
+    const ico=ICONS[j.source]||j.source.substring(0,2).toUpperCase();
+    let url=j.url||'#';
+    if(url!=='#'&&!url.startsWith('http')) url='https://'+url;
 
-    const tagHtml = (j.tags||[]).map(t => {
-      let cls = "tag";
-      if (t.includes("⚙️")) cls += " engineer";
-      else if (t.includes("🔄")) cls += " rotation";
-      else if (t.includes("📅")) cls += " date";
-      else if (t.includes("€"))  cls += " salary";
-      return `<span class="${cls}">${t}</span>`;
-    }).join("");
+    const tagHtml=(j.tags||[]).map(t=>{
+      let c='tag';
+      if(t.includes('⚙️'))c+=' eng';
+      else if(t.includes('🔄'))c+=' rot';
+      else if(t.includes('📅'))c+=' dat';
+      else if(t.includes('€'))c+=' sal';
+      return`<span class="${c}">${t}</span>`;
+    }).join('');
+    const warnHtml=(j.warnings||[]).map(w=>`<span class="tag wrn">${w}</span>`).join('');
 
-    const warnHtml = (j.warnings||[]).map(w =>
-      `<span class="tag warn">${w}</span>`
-    ).join("");
-
-    // Asegurar URL absoluta
-    let url = j.url || "#";
-    if (url !== "#" && !url.startsWith("http")) url = "https://" + url;
-
-    const card = document.createElement("a");
-    card.className = "job-card" + (isNew ? " new-today" : "");
-    card.href = url;
-    card.target = "_blank";
-    card.rel = "noopener noreferrer";
-    card.innerHTML = `
-      <div class="src-avatar">${icon}</div>
-      <div class="job-main">
-        <div class="job-title">${j.title}</div>
-        <div class="job-source-label">${j.source}</div>
-        <div class="job-tags">${tagHtml}${warnHtml}</div>
+    const card=document.createElement('a');
+    card.className='card'+(isNew?' is-new':'');
+    card.href=url;
+    card.target='_blank';
+    card.rel='noopener noreferrer';
+    card.innerHTML=`
+      <div class="card-ico">${ico}</div>
+      <div class="card-body">
+        <div class="card-title">${j.title}</div>
+        <div class="card-src">${j.source}</div>
+        <div class="card-tags">${tagHtml}${warnHtml}</div>
       </div>
-      <div class="job-cta">
-        ${isNew ? '<span class="badge-new">Nueva</span>' : ''}
-        <a class="btn-view" href="${url}" target="_blank" rel="noopener noreferrer"
+      <div class="card-right">
+        ${isNew?'<span class="badge-new">Nueva</span>':'<span></span>'}
+        <a class="btn-ver" href="${url}" target="_blank" rel="noopener noreferrer"
            onclick="event.stopPropagation()">Ver →</a>
       </div>`;
     list.appendChild(card);
