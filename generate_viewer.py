@@ -60,7 +60,7 @@ for j in all_jobs:
 print(f"\n✅ {len(fresh_jobs)} ofertas únicas del run actual")
 
 # ── Combinar con historial de 15 días ────────────────────────────────────────
-KEEP_DAYS = 15
+KEEP_DAYS = 30
 cutoff    = datetime.datetime.utcnow() - datetime.timedelta(days=KEEP_DAYS)
 json_path = SCRIPT_DIR / "docs" / "jobs.json"
 
