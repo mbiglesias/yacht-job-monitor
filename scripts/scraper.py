@@ -542,6 +542,23 @@ def scrape_northropjohnson():
                          "Northrop & Johnson", ["job", "vacanc", "position", "crew"])
 
 
+def scrape_xelvin():
+    """Xelvin Yacht & Shipbuilding — agencia holandesa, ingenieros para superyates NL/EU"""
+    html = get("https://www.xelvin.nl/vacatures/?sector=jacht-scheepsbouw&zoekterm=engineer")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    jobs = _extract_jobs(soup, "https://www.xelvin.nl",
+                         "Xelvin", ["/vacature/", "/vacancy/", "/job/", "/jobs/"])
+    if not jobs:
+        # Fallback: URL en inglés
+        html2 = get("https://www.xelvin.nl/en/vacancies/?sector=yacht-shipbuilding")
+        soup2 = BeautifulSoup(html2, "html.parser") if html2 else None
+        if soup2:
+            jobs = _extract_jobs(soup2, "https://www.xelvin.nl",
+                                 "Xelvin", ["/vacature/", "/vacancy/", "/job/"])
+    return jobs
+
+
 def scrape_telegram_seamenjob():
     """t.me/s/seamenjob — canal marino general, incluye yates y offshore"""
     return _scrape_telegram("seamenjob", "Telegram: SeamenJob")
@@ -721,6 +738,7 @@ def build_email(new_jobs):
         <a href="https://www.wilsonhalligan.com/our-current-roles/" style="color:#0f3460;">Wilsonhalligan</a> ·
         <a href="https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx" style="color:#0f3460;">Quay Crew</a> ·
         <a href="https://crew.northropandjohnson.com/crew-jobs/" style="color:#0f3460;">Northrop &amp; Johnson</a> ·
+        <a href="https://www.xelvin.nl/vacatures/?sector=jacht-scheepsbouw" style="color:#0f3460;">Xelvin</a> ·
         <a href="https://t.me/seamenjob" style="color:#0f3460;">Telegram SeamenJob</a> ·
         <a href="https://t.me/marinepublic_com" style="color:#0f3460;">Telegram MarinePublic</a>{li_note}
       </p>
@@ -760,7 +778,7 @@ def main():
         # Nuevas fuentes
         scrape_mycrewkit,
         scrape_bespokecrew, scrape_wilsonhalligan, scrape_quaycrew,
-        scrape_northropjohnson,
+        scrape_northropjohnson, scrape_xelvin,
         scrape_telegram_seamenjob, scrape_telegram_marinepublic,
         # LinkedIn (solo activo si LINKEDIN_RSS_URL está configurado)
         scrape_linkedin_rss,
