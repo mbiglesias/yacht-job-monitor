@@ -42,42 +42,40 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 /* ── HEADER ──────────────────────────────────── */
 .topbar{background:var(--navy);position:sticky;top:0;z-index:100;
   box-shadow:0 2px 12px rgba(0,0,0,.3)}
-.topbar-inner{display:flex;align-items:center;gap:12px;
-  padding:12px 16px;max-width:900px;margin:0 auto}
-.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;text-decoration:none}
-.logo-ico{width:34px;height:34px;background:rgba(14,165,233,.15);
-  border:1.5px solid rgba(14,165,233,.3);border-radius:9px;
-  display:flex;align-items:center;justify-content:center;font-size:17px}
+.topbar-row1{display:flex;align-items:center;gap:10px;
+  padding:10px 16px 8px;max-width:900px;margin:0 auto}
+.logo{display:flex;align-items:center;gap:10px;flex:1;min-width:0;text-decoration:none}
+.logo-ico{width:32px;height:32px;background:rgba(14,165,233,.15);
+  border:1.5px solid rgba(14,165,233,.3);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
 .logo-text h1{font-family:'Syne',sans-serif;font-size:15px;font-weight:800;
   color:#fff;line-height:1}
 .logo-text h1 span{color:var(--sea)}
 .logo-text small{font-size:10px;color:#475569;display:block;margin-top:2px}
-.search-wrap{flex:1;position:relative;min-width:0}
+.topbar-search{padding:0 16px 10px;max-width:900px;margin:0 auto}
+.search-wrap{position:relative}
 .search-wrap input{width:100%;background:rgba(255,255,255,.08);
-  border:1.5px solid rgba(255,255,255,.1);border-radius:9px;
-  padding:9px 12px 9px 32px;color:#fff;font-size:13px;
-  font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none}
+  border:1.5px solid rgba(255,255,255,.12);border-radius:9px;
+  padding:10px 12px 10px 34px;color:#fff;font-size:14px;
+  font-family:'Inter',sans-serif;outline:none;-webkit-appearance:none;
+  -webkit-tap-highlight-color:transparent}
 .search-wrap input::placeholder{color:#475569}
 .search-wrap input:focus{border-color:var(--sea)}
-.search-ico{position:absolute;left:10px;top:50%;transform:translateY(-50%);
-  color:#475569;font-size:12px;pointer-events:none}
-.filter-btn{background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.1);
-  border-radius:9px;padding:9px 12px;color:#94a3b8;font-size:12px;
-  cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:5px;
-  transition:all .15s;flex-shrink:0}
-.filter-btn:active{background:rgba(255,255,255,.15)}
+.search-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);
+  color:#475569;font-size:13px;pointer-events:none}
 
 /* ── FILTER PILLS ────────────────────────────── */
-.pills-bar{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.06);
+.pills-bar{background:var(--navy);border-bottom:1px solid rgba(255,255,255,.08);
   overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
 .pills-bar::-webkit-scrollbar{display:none}
-.pills-inner{display:flex;gap:6px;padding:8px 16px;
+.pills-inner{display:flex;gap:6px;padding:0 16px 10px;
   max-width:900px;margin:0 auto;width:max-content;min-width:100%}
-.pill{display:flex;align-items:center;gap:4px;padding:6px 12px;
+.pill{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;
   border-radius:20px;border:1.5px solid rgba(255,255,255,.1);
   background:rgba(255,255,255,.05);color:#94a3b8;
   font-size:12px;font-weight:500;cursor:pointer;
-  transition:all .15s;white-space:nowrap;flex-shrink:0}
+  transition:all .15s;white-space:nowrap;flex-shrink:0;
+  -webkit-tap-highlight-color:transparent}
 .pill.active{background:var(--sea);border-color:var(--sea);color:#fff}
 
 /* ── STATS ───────────────────────────────────── */
@@ -172,9 +170,24 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
   .content{grid-template-columns:200px 1fr;align-items:start}
   .sidebar-toggle{display:none}
   .sidebar-body{display:block!important;border:1px solid var(--border);
-    border-radius:var(--radius);padding:14px;position:sticky;top:80px}
+    border-radius:var(--radius);padding:14px;position:sticky;top:96px}
   .src-grid{grid-template-columns:1fr}
   .card:hover{box-shadow:0 4px 16px rgba(10,37,64,.08);border-color:#bfdbfe}
+  /* Desktop: logo + search on same row */
+  .topbar-row1{padding-bottom:10px}
+  .topbar-search{display:none}
+  .topbar-row1::after{content:'';display:none}
+  .logo{flex:0 0 auto}
+  .topbar-row1{position:relative}
+  .desktop-search{flex:1;position:relative;margin-left:auto}
+  .desktop-search input{width:100%;background:rgba(255,255,255,.08);
+    border:1.5px solid rgba(255,255,255,.12);border-radius:9px;
+    padding:8px 12px 8px 34px;color:#fff;font-size:13px;
+    font-family:'Inter',sans-serif;outline:none}
+  .desktop-search input::placeholder{color:#475569}
+  .desktop-search input:focus{border-color:var(--sea)}
+  .desktop-search .search-ico{position:absolute;left:11px;top:50%;
+    transform:translateY(-50%);color:#475569;font-size:12px;pointer-events:none}
 }
 </style>
 </head>
@@ -197,7 +210,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 <div id="app">
 
 <div class="topbar">
-  <div class="topbar-inner">
+  <div class="topbar-row1">
     <div class="logo">
       <div class="logo-ico">⚙️</div>
       <div class="logo-text">
@@ -205,9 +218,16 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
         <small>Engineer · Rotation · ≥6K€ · ~2 meses</small>
       </div>
     </div>
+    <div class="desktop-search">
+      <span class="search-ico">🔍</span>
+      <input type="search" id="search-desktop" placeholder="Buscar por título, fuente, salario…"
+             oninput="document.getElementById('search').value=this.value;render()">
+    </div>
+  </div>
+  <div class="topbar-search">
     <div class="search-wrap">
       <span class="search-ico">🔍</span>
-      <input type="search" id="search" placeholder="Buscar…" oninput="render()">
+      <input type="search" id="search" placeholder="Buscar por título, fuente, salario…" oninput="render()">
     </div>
   </div>
 </div>
