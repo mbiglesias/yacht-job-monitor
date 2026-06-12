@@ -50,10 +50,6 @@ jobs:
           VIEWER_PASSWORD: ${{ secrets.VIEWER_PASSWORD }}
         run: python generate_viewer.py
 
-      # Renombrar el output a index.html para GitHub Pages
-      - name: Prepare for GitHub Pages
-        run: cp viewer_output.html docs/index.html
-
       # Commitear el index.html actualizado al repo
       - name: Commit updated viewer
         run: |
