@@ -521,38 +521,133 @@ def scrape_yotspot():
         if found_this_page == 0: break
     return all_jobs
 
-def scrape_crewnetwork():
-    # Log: 184KB, links son navegación. El buscador carga via JS.
-    # Usamos la URL de búsqueda directa con parámetros que devuelve links estáticos
+def _parse_text_jobs(text: str, source: str, page_url: str, max_results: int = 15) -> list:
+    """
+    Extrae ofertas de trabajo del texto plano de una página JS-rendered.
+    Usado cuando el HTML tiene el contenido en texto pero los links están en JS.
+    La URL de la oferta apunta a la página del listado (no individual).
+    """
+    # Patrones de líneas que NO son títulos de jobs (navegación, stats, headers)
+    NAV_PATTERNS = [
+        r'^\d+\s+contract', r'^engineering\s+\d+', r'^deck\s+\d+',
+        r'^interior\s+\d+', r'^galley\s+\d+', r'sort by', r'filter',
+        r'results found', r'^\d+\s+jobs', r'per page', r'relevance',
+        r'department', r'distance', r'^position\s', r'^contract type',
+        r'^salary range', r'^location\s*:', r'cookie', r'privacy policy',
+        r'terms of', r'sign in', r'log in', r'register', r'subscribe',
+    ]
+    ROLE_KWS = [
+        'chief engineer', 'sole engineer', '1st engineer', '2nd engineer',
+        '3rd engineer', 'junior engineer', 'relief engineer', 'eto',
+        'electro-technical', 'electrotechnical', 'engineer'
+    ]
+
+    def is_nav(line):
+        t = line.lower().strip()
+        return any(re.search(p, t) for p in NAV_PATTERNS)
+
+    def is_job_title(line):
+        t = line.lower().strip()
+        if not any(kw in t for kw in ROLE_KWS): return False
+        if is_nav(line): return False
+        if len(line) < 6 or len(line) > 150: return False
+        if t in ['engineering', 'engineer', 'eto']: return False
+        return True
+
+    lines = [l.strip() for l in text.split('\n') if l.strip()]
     jobs = []
-    for url in [
-        "https://www.crewnetwork.com/looking-for-a-job/",
-        "https://www.crewnetwork.com/vacancies/",
-        "https://www.crewnetwork.com/jobs/",
-    ]:
-        html = get(url)
-        if not html: continue
-        soup = BeautifulSoup(html, "html.parser")
-        found = _extract_jobs(soup, "https://www.crewnetwork.com",
-                             "Crew Network", ["/job/", "/vacancy/", "/vacancies/", "engineer"])
-        jobs.extend(found)
-        if jobs: break
-    return jobs[:15]
+    seen_titles = set()
+
+    for i, line in enumerate(lines):
+        if not is_job_title(line): continue
+        if line in seen_titles: continue
+        seen_titles.add(line)
+
+        # Collect context: current line + next 4 lines
+        context = ' '.join(lines[i:i+5])
+
+        result = score_job(line, context)
+        if result['passes']:
+            # Use page URL + anchor for dedup (can't get individual job URLs)
+            slug = re.sub(r'[^a-z0-9]+', '-', line.lower()).strip('-')[:60]
+            url = f"{page_url}#{slug}"
+            jobs.append({
+                'title':    line,
+                'url':      url,
+                'source':   source,
+                'tags':     result['tags'],
+                'warnings': result['warnings'],
+                'posted':   result.get('posted'),
+            })
+            if len(jobs) >= max_results:
+                break
+
+    return jobs
+
 
 def scrape_bluewateryachting():
-    # Log: 74KB, links son /yachts-for-sale/ — URL de crew jobs incorrecta
-    for url in [
-        "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs",
-        "https://www.bluewateryachting.com/crew-placement/jobs/",
-        "https://www.bluewateryachting.com/jobs/",
-    ]:
-        html = get(url)
-        if not html: continue
-        soup = BeautifulSoup(html, "html.parser")
-        jobs = _extract_jobs(soup, "https://www.bluewateryachting.com",
-                             "Bluewater Yachting", ["/job/", "/jobs/", "vacancy", "crew-job"])
-        if jobs: return jobs
-    return []
+    # Log: 74KB, links son /yachts-for-sale — jobs en texto del body
+    url = "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs"
+    html = get(url)
+    if not html: return []
+    soup = BeautifulSoup(html, "html.parser")
+    # Primero intentar links normales
+    jobs = _extract_jobs(soup, "https://www.bluewateryachting.com",
+                         "Bluewater Yachting", ["/job/", "/jobs/", "crew-placement/yacht-crew/jobs/"])
+    if jobs: return jobs
+    # Fallback: parsear texto del body
+    for tag in soup(["nav", "footer", "script", "style", "header"]):
+        tag.decompose()
+    text = soup.get_text('\n', strip=True)
+    return _parse_text_jobs(text, "Bluewater Yachting", url)
+
+
+def scrape_saltwater():
+    # Log: 657KB, links son /about-us/ — jobs en texto del body
+    url = "https://www.saltwaterrecruitment.com/jobs/?category=engineering"
+    html = get(url)
+    if not html: return []
+    soup = BeautifulSoup(html, "html.parser")
+    jobs = _extract_jobs(soup, "https://www.saltwaterrecruitment.com",
+                         "Saltwater Recruitment",
+                         ["/job/", "/jobs/", "/vacancy/", "/vacancies/", "/role/"])
+    if jobs: return jobs
+    for tag in soup(["nav", "footer", "script", "style", "header"]):
+        tag.decompose()
+    text = soup.get_text('\n', strip=True)
+    return _parse_text_jobs(text, "Saltwater Recruitment", url)
+
+
+def scrape_faststream():
+    # Log: 998KB, links son /register/ /login/ — jobs en texto
+    url = "https://www.faststream.com/jobs/superyacht-jobs/?department=engineering"
+    html = get(url)
+    if not html: return []
+    soup = BeautifulSoup(html, "html.parser")
+    jobs = _extract_jobs(soup, "https://www.faststream.com",
+                         "Faststream", ["/job/", "/superyacht-jobs/"])
+    if jobs: return jobs
+    for tag in soup(["nav", "footer", "script", "style", "header"]):
+        tag.decompose()
+    text = soup.get_text('\n', strip=True)
+    return _parse_text_jobs(text, "Faststream", url)
+
+
+def scrape_crewnetwork():
+    # Log: 184KB, links son navegación — jobs en texto del body
+    url = "https://www.crewnetwork.com/looking-for-a-job/"
+    html = get(url)
+    if not html: return []
+    soup = BeautifulSoup(html, "html.parser")
+    jobs = _extract_jobs(soup, "https://www.crewnetwork.com",
+                         "Crew Network", ["/job/", "/vacancy/", "/vacancies/"])
+    if jobs: return jobs
+    for tag in soup(["nav", "footer", "script", "style", "header"]):
+        tag.decompose()
+    text = soup.get_text('\n', strip=True)
+    return _parse_text_jobs(text, "Crew Network", url)
+
+
 
 def scrape_findacrew():
     # 404 — URL cambió. Probar variantes
@@ -592,32 +687,6 @@ def scrape_yacrew():
                 all_jobs.append(j)
     return all_jobs[:30]
 
-def scrape_saltwater():
-    # Log: 657KB — la página TIENE las ofertas en texto pero los links son JS.
-    # El texto incluye "Permanent 39 Temporary 6 Seasonal 1" y títulos de jobs.
-    # Estrategia: buscar links con /job/ o /vacancy/ que estén en el HTML aunque sean JS-generados
-    html = get("https://www.saltwaterrecruitment.com/jobs/?category=engineering")
-    if not html: return []
-    soup = BeautifulSoup(html, "html.parser")
-    # Buscar cualquier link que apunte a una oferta individual
-    jobs = _extract_jobs(soup, "https://www.saltwaterrecruitment.com",
-                         "Saltwater Recruitment",
-                         ["/job/", "/jobs/", "/vacancy/", "/vacancies/", "/role/", "/current-vacancies/"])
-    if not jobs:
-        # Fallback: buscar links con números en la ruta (IDs de jobs)
-        for a in soup.find_all("a", href=True):
-            href = a["href"]
-            if re.search(r'/\d{3,}/?$', href) and a.get_text(strip=True):
-                if not href.startswith("http"):
-                    href = "https://www.saltwaterrecruitment.com" + href
-                result = score_job(a.get_text(strip=True), "", job_url=href)
-                if result["passes"]:
-                    jobs.append({"title": a.get_text(strip=True), "url": href,
-                                 "source": "Saltwater Recruitment",
-                                 "tags": result["tags"], "warnings": result["warnings"],
-                                 "posted": result.get("posted")})
-    return jobs[:15]
-
 def scrape_crewin():
     # SSL error — skip SSL verification
     try:
@@ -629,22 +698,6 @@ def scrape_crewin():
                                  "Crewin", ["/job/", "/jobs/", "/vacancy/", "/role/"])
     except Exception:
         pass
-    return []
-
-def scrape_faststream():
-    # Log: 998KB — enorme, links son /register/ y /login/
-    # Probar URL alternativa más específica
-    for url in [
-        "https://www.faststream.com/superyacht-jobs/",
-        "https://www.faststream.com/jobs/?category=superyacht",
-        "https://www.faststream.com/jobs/superyacht-jobs/",
-    ]:
-        html = get(url)
-        if not html: continue
-        soup = BeautifulSoup(html, "html.parser")
-        jobs = _extract_jobs(soup, "https://www.faststream.com",
-                             "Faststream", ["/job/", "/jobs/", "/vacancy/", "/superyacht-jobs/"])
-        if jobs: return jobs
     return []
 
 def scrape_ypicrew():
