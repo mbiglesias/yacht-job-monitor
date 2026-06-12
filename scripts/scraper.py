@@ -86,6 +86,11 @@ EXCLUDE_VESSEL_KEYWORDS = [
     "voyage duration", "voyage contract",
     "embarkation port", "joining port",
     "port of joining",
+    # Cirílico / ucraniano (Telegram)
+    "контейнеровоз", "балкер", "танкер", "суховантаж", "наливн",
+    # Empresas comerciales frecuentes en Telegram
+    "msc crewing", "msc crewing services",
+    "maersk", "cma cgm", "hapag-lloyd", "evergreen",
 ]
 
 # Palabras que confirman que SÍ es un yate — anulan la exclusión por tipo de buque
@@ -796,9 +801,11 @@ def main():
 
     new_jobs = []
     new_seen = set(seen)
+    now_iso = datetime.datetime.utcnow().isoformat() + "Z"
     for j in all_jobs:
         jid = job_id(j["title"], j["url"])
         if jid not in seen:
+            j["seen_at"] = now_iso   # timestamp para filtro de 15 días en viewer
             new_jobs.append(j)
             new_seen.add(jid)
 
