@@ -522,72 +522,139 @@ def scrape_yotspot():
     return all_jobs
 
 def scrape_crewnetwork():
-    html = get("https://www.crewnetwork.com/looking-for-a-job/")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.crewnetwork.com",
-                         "Crew Network", ["/job/", "vacancy", "position"])
+    # Log: 184KB, links son navegación. El buscador carga via JS.
+    # Usamos la URL de búsqueda directa con parámetros que devuelve links estáticos
+    jobs = []
+    for url in [
+        "https://www.crewnetwork.com/looking-for-a-job/",
+        "https://www.crewnetwork.com/vacancies/",
+        "https://www.crewnetwork.com/jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        found = _extract_jobs(soup, "https://www.crewnetwork.com",
+                             "Crew Network", ["/job/", "/vacancy/", "/vacancies/", "engineer"])
+        jobs.extend(found)
+        if jobs: break
+    return jobs[:15]
 
 def scrape_bluewateryachting():
-    html = get("https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.bluewateryachting.com",
-                         "Bluewater Yachting", ["job", "position", "vacancy", "crew"])
+    # Log: 74KB, links son /yachts-for-sale/ — URL de crew jobs incorrecta
+    for url in [
+        "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs",
+        "https://www.bluewateryachting.com/crew-placement/jobs/",
+        "https://www.bluewateryachting.com/jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.bluewateryachting.com",
+                             "Bluewater Yachting", ["/job/", "/jobs/", "vacancy", "crew-job"])
+        if jobs: return jobs
+    return []
 
 def scrape_findacrew():
-    html = get("https://www.findacrew.com/search/jobs?keywords=engineer&type=position")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.findacrew.com",
-                         "Find a Crew", ["/job/", "/position/", "/crew/"])
+    # 404 — URL cambió. Probar variantes
+    for url in [
+        "https://www.findacrew.net/en/jobs/search?q=engineer",
+        "https://www.findacrew.net/en/jobs",
+        "https://www.findacrew.com/en/jobs",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, url.split("/en/")[0],
+                             "Find a Crew", ["/job/", "/jobs/", "/en/jobs/"])
+        if jobs: return jobs
+    return []
 
 def scrape_yacrew():
-    html = get("https://www.yacrew.com/jobs?department=engineer")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.yacrew.com", "YaCrew", ["/job"])
+    # 404 → /error/. Probar variantes
+    for url in [
+        "https://www.yacrew.com/vacancies",
+        "https://www.yacrew.com/jobs",
+        "https://www.yacrew.com/en/jobs",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.yacrew.com",
+                             "YaCrew", ["/job", "/vacancy", "/vacanc"])
+        if jobs: return jobs
+    return []
 
 def scrape_saltwater():
+    # Log: 657KB — la página TIENE las ofertas en texto pero los links son JS.
+    # El texto incluye "Permanent 39 Temporary 6 Seasonal 1" y títulos de jobs.
+    # Estrategia: buscar links con /job/ o /vacancy/ que estén en el HTML aunque sean JS-generados
     html = get("https://www.saltwaterrecruitment.com/jobs/?category=engineering")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.saltwaterrecruitment.com",
-                         "Saltwater Recruitment", ["job", "vacanc", "position", "role"])
-
-def scrape_crewin():
-    html = get("https://www.crewin.com/jobs?role=engineer")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    jobs = _extract_jobs(soup, "https://www.crewin.com",
-                         "Crewin", ["job", "/position", "/role", "/vacancy"])
+    if not html: return []
+    soup = BeautifulSoup(html, "html.parser")
+    # Buscar cualquier link que apunte a una oferta individual
+    jobs = _extract_jobs(soup, "https://www.saltwaterrecruitment.com",
+                         "Saltwater Recruitment",
+                         ["/job/", "/jobs/", "/vacancy/", "/vacancies/", "/role/", "/current-vacancies/"])
     if not jobs:
+        # Fallback: buscar links con números en la ruta (IDs de jobs)
         for a in soup.find_all("a", href=True):
             href = a["href"]
-            text = a.get_text(strip=True)
-            if re.search(r"/jobs?/\d+", href) and text and len(text) > 8:
+            if re.search(r'/\d{3,}/?$', href) and a.get_text(strip=True):
                 if not href.startswith("http"):
-                    href = "https://www.crewin.com" + href
-                result = score_job(text, a.parent.get_text(" ", strip=True) if a.parent else "", job_url=href)
+                    href = "https://www.saltwaterrecruitment.com" + href
+                result = score_job(a.get_text(strip=True), "", job_url=href)
                 if result["passes"]:
-                    jobs.append({"title": text, "url": href, "source": "Crewin",
+                    jobs.append({"title": a.get_text(strip=True), "url": href,
+                                 "source": "Saltwater Recruitment",
                                  "tags": result["tags"], "warnings": result["warnings"],
                                  "posted": result.get("posted")})
-    return jobs[:20]
+    return jobs[:15]
+
+def scrape_crewin():
+    # SSL error — skip SSL verification
+    try:
+        import requests as _req
+        r = _req.get("https://www.crewin.com/jobs", headers=HEADERS, timeout=10, verify=False)
+        if r.ok:
+            soup = BeautifulSoup(r.text, "html.parser")
+            return _extract_jobs(soup, "https://www.crewin.com",
+                                 "Crewin", ["/job/", "/jobs/", "/vacancy/", "/role/"])
+    except Exception:
+        pass
+    return []
 
 def scrape_faststream():
-    html = get("https://www.faststream.com/jobs/superyacht-jobs/?department=engineering")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.faststream.com",
-                         "Faststream", ["job", "vacanc", "position", "role"])
+    # Log: 998KB — enorme, links son /register/ y /login/
+    # Probar URL alternativa más específica
+    for url in [
+        "https://www.faststream.com/superyacht-jobs/",
+        "https://www.faststream.com/jobs/?category=superyacht",
+        "https://www.faststream.com/jobs/superyacht-jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.faststream.com",
+                             "Faststream", ["/job/", "/jobs/", "/vacancy/", "/superyacht-jobs/"])
+        if jobs: return jobs
+    return []
 
 def scrape_ypicrew():
-    html = get("https://www.ypicrew.com/find-a-job/?department=engineering")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.ypicrew.com",
-                         "YPI Crew", ["job", "vacanc", "position"])
+    # 404 — URL cambió
+    for url in [
+        "https://www.ypicrew.com/find-a-job/",
+        "https://www.ypicrew.com/vacancies/",
+        "https://www.ypicrew.com/jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.ypicrew.com",
+                             "YPI Crew", ["/job/", "/jobs/", "/vacancy/", "/find-a-job/"])
+        if jobs: return jobs
+    return []
+
+
 
 def scrape_bespokecrew():
     all_jobs = []
@@ -603,18 +670,70 @@ def scrape_bespokecrew():
     return all_jobs
 
 def scrape_wilsonhalligan():
-    html = get("https://www.wilsonhalligan.com/our-current-roles/")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://www.wilsonhalligan.com",
-                         "Wilsonhalligan", ["/job/", "/vacancy/", "/role/", "/position/"])
+    # Log: 213KB, links son /about-us/ /services/ — jobs cargan via JS
+    # pero el texto contiene "Rotational Temporary Permanent Job Location Type"
+    # Probar URL directa de job listings
+    for url in [
+        "https://www.wilsonhalligan.com/our-current-roles/",
+        "https://www.wilsonhalligan.com/vacancies/",
+        "https://www.wilsonhalligan.com/jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.wilsonhalligan.com",
+                             "Wilsonhalligan", ["/job/", "/vacancy/", "/role/", "/position/", "/our-current-roles/"])
+        if jobs: return jobs
+    return []
 
 def scrape_quaycrew():
-    html = get("https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx")
-    soup = BeautifulSoup(html, "html.parser") if html else None
-    if not soup: return []
-    return _extract_jobs(soup, "https://jobs.quaygroup.com",
-                         "Quay Crew", ["/job/", "/jobs/", "/vacancy/", "/position/", ".aspx"])
+    # Log: 45KB, links incluyen /superyacht-jobs/crew-resources/ y jobs.quaygroup.com
+    # Probar URL del job listing directa
+    for url in [
+        "https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx",
+        "https://jobs.quaygroup.com/search/?q=engineer+yacht",
+        "https://www.quaygroup.com/superyacht-jobs/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://jobs.quaygroup.com",
+                             "Quay Crew", ["/job/", "/jobs/", "/vacancy/", "aspx", "/engineer"])
+        if jobs: return jobs
+    return []
+
+def scrape_northropjohnson():
+    # Log: 153KB, links son /yachts-for-sale/ /superyachts/ — URL incorrecta
+    # Desde el log: links incluyen /crew/find-a-job/ — usar esa URL
+    for url in [
+        "https://www.northropandjohnson.com/crew/find-a-job/",
+        "https://crew.northropandjohnson.com/crew-jobs/",
+        "https://www.northropandjohnson.com/crew/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.northropandjohnson.com",
+                             "Northrop & Johnson", ["/job/", "/jobs/", "/vacancy/", "/crew/find-a-job/"])
+        if jobs: return jobs
+    return []
+
+def scrape_xelvin():
+    # 404 en /en/vacancies/?sector=yacht-shipbuilding
+    # Probar variantes
+    for url in [
+        "https://www.xelvin.nl/vacatures/?sector=jacht-scheepsbouw",
+        "https://www.xelvin.nl/en/vacancies/",
+        "https://www.xelvin.nl/en/vacancies/?sector=marine",
+        "https://www.xelvin.nl/vacatures/",
+    ]:
+        html = get(url)
+        if not html: continue
+        soup = BeautifulSoup(html, "html.parser")
+        jobs = _extract_jobs(soup, "https://www.xelvin.nl",
+                             "Xelvin", ["/vacature/", "/vacancy/", "/job/", "/jobs/"])
+        if jobs: return jobs
+    return []
 
 def scrape_mycrewkit():
     html = get("https://mycrewkit.com/superyacht-jobs/engineer/")
