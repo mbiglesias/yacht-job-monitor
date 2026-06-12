@@ -148,6 +148,7 @@ body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-h
 .tag.rot{background:#f0fdf4;color:#15803d;border:1px solid #bbf7d0}
 .tag.dat{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}
 .tag.sal{background:#fefce8;color:#a16207;border:1px solid #fde68a}
+.tag.pub{background:#f5f3ff;color:#6d28d9;border:1px solid #ddd6fe}
 .tag.wrn{background:#f8fafc;color:#94a3b8;border:1px solid #e2e8f0}
 .card-right{display:flex;flex-direction:column;align-items:flex-end;
   justify-content:space-between;gap:8px;flex-shrink:0}
@@ -436,6 +437,7 @@ function render(){
       return`<span class="${c}">${t}</span>`;
     }).join('');
     const warnHtml=(j.warnings||[]).map(w=>`<span class="tag wrn">${w}</span>`).join('');
+    const postedHtml=j.posted?`<span class="tag pub">📆 ${j.posted}</span>`:'';
 
     const card=document.createElement('a');
     card.className='card'+(isNew?' is-new':'');
@@ -447,7 +449,7 @@ function render(){
       <div class="card-body">
         <div class="card-title">${j.title}</div>
         <div class="card-src">${j.source}</div>
-        <div class="card-tags">${tagHtml}${warnHtml}</div>
+        <div class="card-tags">${tagHtml}${warnHtml}${postedHtml}</div>
       </div>
       <div class="card-right">
         ${isNew?'<span class="badge-new">Nueva</span>':'<span></span>'}
