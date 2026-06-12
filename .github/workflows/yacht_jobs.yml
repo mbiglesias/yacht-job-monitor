@@ -50,12 +50,11 @@ jobs:
           VIEWER_PASSWORD: ${{ secrets.VIEWER_PASSWORD }}
         run: python generate_viewer.py
 
-      # Commitear el index.html actualizado al repo
       - name: Commit updated viewer
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/index.html
+          git add docs/index.html docs/jobs.json
           git diff --staged --quiet || git commit -m "chore: update job viewer [skip ci]"
           git push
 
