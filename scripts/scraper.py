@@ -816,10 +816,60 @@ def send_email(new_jobs):
 
 # ─── MAIN ──────────────────────────────────────────────────────────────────────
 
+def _extract_json_jobs(html: str, base_url: str, source: str) -> list:
+    """
+    Fallback para sitios JS-rendered: extrae ofertas de JSON embebido en el HTML.
+    Busca __NEXT_DATA__, window.__INITIAL_STATE__, y otros patrones comunes.
+    """
+    import json as _json
+    jobs = []
+    
+    # 1. Next.js __NEXT_DATA__
+    m = re.search(r'<script id="__NEXT_DATA__"[^>]*>(.*?)</script>', html, re.DOTALL)
+    if m:
+        try:
+            data = _json.loads(m.group(1))
+            # Buscar arrays que parezcan listas de jobs en cualquier nivel
+            text = _json.dumps(data)
+            # Si contiene keywords de engineer, vale explorarlo
+            if any(kw in text.lower() for kw in ["engineer", "eto", "chief engineer"]):
+                print(f"      → __NEXT_DATA__ encontrado, {len(text)} chars")
+                print(f"        keys: {list(data.get('props',{}).get('pageProps',{}).keys())[:5]}")
+        except Exception:
+            pass
+
+    # 2. Imprimir primeros 500 chars del body para debug
+    soup = BeautifulSoup(html, "html.parser")
+    for tag in soup(["script", "style", "nav", "footer", "header"]):
+        tag.decompose()
+    body_text = soup.get_text(" ", strip=True)[:300]
+    print(f"      → body preview: {body_text[:200]}")
+    
+    # 3. Contar todos los links
+    all_links = [a.get("href","") for a in BeautifulSoup(html, "html.parser").find_all("a", href=True)]
+    print(f"      → total links: {len(all_links)}")
+    if all_links:
+        sample = [h for h in all_links if h and not h.startswith("#")][:5]
+        print(f"      → sample links: {sample}")
+    
+    return jobs
+
 def main():
     print("🔍 Filtros: Engineer | Rotación | ~2 meses | ≥6.000€/mes | Solo yates")
     seen = load_seen()
     all_jobs = []
+    
+    # URLs para debug de sitios que dan 0
+    debug_urls = {
+        "crewnetwork":     "https://www.crewnetwork.com/looking-for-a-job/",
+        "bluewateryachting": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs",
+        "saltwater":       "https://www.saltwaterrecruitment.com/jobs/?category=engineering",
+        "faststream":      "https://www.faststream.com/jobs/superyacht-jobs/?department=engineering",
+        "wilsonhalligan":  "https://www.wilsonhalligan.com/our-current-roles/",
+        "quaycrew":        "https://jobs.quaygroup.com/sectors/4/yacht-engineering-jobs.aspx",
+        "northropjohnson": "https://crew.northropandjohnson.com/crew-jobs/",
+    }
+    
     scrapers = [
         scrape_yotspot, scrape_crewnetwork, scrape_bluewateryachting,
         scrape_findacrew, scrape_yacrew,
@@ -835,9 +885,21 @@ def main():
         try:
             found = fn()
             print(f"{len(found)} match(es)")
+            for j in found[:2]:
+                print(f"      ✓ {j['title'][:70]}")
+                print(f"        tags={j.get('tags',[])} | posted={j.get('posted')}")
+            # Si da 0 y tiene URL de debug, mostrar el HTML
+            if not found and name in debug_urls:
+                html = get(debug_urls[name])
+                if html:
+                    print(f"      → HTTP OK, {len(html)} bytes — analizando estructura...")
+                    _extract_json_jobs(html, debug_urls[name], name)
+                else:
+                    print(f"      → fetch falló (403/404/timeout)")
             all_jobs.extend(found)
         except Exception as e:
             print(f"ERROR: {e}")
+            import traceback; traceback.print_exc()
 
     new_jobs = []
     new_seen = set(seen)
