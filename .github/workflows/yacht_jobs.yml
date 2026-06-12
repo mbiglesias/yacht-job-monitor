@@ -2,13 +2,9 @@ name: Yacht Engineer Job Monitor
 
 on:
   schedule:
-    # 8:00 AM UTC = 5:00 AM Uruguay (UTC-3)
-    - cron: "0 8 * * *"
-    # 17:00 UTC = 14:00 Uruguay (UTC-3)
-    - cron: "0 17 * * *"
-  
-  # Permite ejecutarlo manualmente desde GitHub para testear
-  workflow_dispatch:
+    - cron: "0 8 * * *"   # 8:00 UTC = 5:00 AM Uruguay
+    - cron: "0 17 * * *"  # 17:00 UTC = 2:00 PM Uruguay
+  workflow_dispatch:       # ejecución manual desde GitHub
 
 jobs:
   scrape-and-notify:
@@ -18,7 +14,6 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # ── Restaurar caché de jobs ya vistos ──────────────────────────────────
       - name: Restore seen jobs cache
         uses: actions/cache@v4
         with:
@@ -27,25 +22,37 @@ jobs:
           restore-keys: |
             seen-jobs-
 
-      # ── Python setup ───────────────────────────────────────────────────────
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
 
       - name: Install dependencies
-        run: |
-          pip install requests beautifulsoup4 lxml
+        run: pip install requests beautifulsoup4 lxml
 
-      # ── Run scraper ────────────────────────────────────────────────────────
-      - name: Run job scraper
+      - name: Run scraper + send email
         env:
           GMAIL_USER: ${{ secrets.GMAIL_USER }}
           GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
           EMAIL_TO:   ${{ secrets.EMAIL_TO }}
+          LINKEDIN_RSS_URL: ${{ secrets.LINKEDIN_RSS_URL }}
         run: python scripts/scraper.py
 
-      # ── Guardar seen_jobs.json actualizado ────────────────────────────────
+      - name: Generate HTML viewer
+        env:
+          GMAIL_USER: ${{ secrets.GMAIL_USER }}
+          GMAIL_PASS: ${{ secrets.GMAIL_PASS }}
+          EMAIL_TO:   ${{ secrets.EMAIL_TO }}
+          LINKEDIN_RSS_URL: ${{ secrets.LINKEDIN_RSS_URL }}
+        run: python generate_viewer.py
+
+      - name: Upload viewer as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: yacht-jobs-viewer-${{ github.run_number }}
+          path: viewer_output.html
+          retention-days: 3   # se borra a los 3 días, siempre hay uno fresco
+
       - name: Save updated seen jobs
         uses: actions/cache/save@v4
         if: always()
