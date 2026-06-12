@@ -225,25 +225,128 @@ def get(url, timeout=15):
         print(f"  ⚠ Error fetching {url}: {e}")
         return ""
 
-def fetch_job_detail(url: str) -> str:
+def fetch_job_detail(url: str) -> dict:
     """
-    Entra a la página del anuncio y devuelve el texto completo.
-    Se usa solo cuando el card del listado no trae salario,
-    para no hacer demasiadas requests.
+    Entra a la página del anuncio.
+    Devuelve dict con:
+      - text: str  (texto completo para filtros)
+      - posted: str | None  (fecha de publicación legible, ej "04 Jun 2026")
     """
     html = get(url, timeout=10)
     if not html:
-        return ""
+        return {"text": "", "posted": None}
+
     soup = BeautifulSoup(html, "html.parser")
-    # Quitar nav, footer, scripts
+
+    # ── Intentar extraer fecha de publicación ──────────────────────────────
+    posted = None
+
+    # 1. Meta tags estándar
+    for meta_name in ["article:published_time", "datePublished", "date", "publish_date"]:
+        tag = soup.find("meta", property=meta_name) or soup.find("meta", attrs={"name": meta_name})
+        if tag and tag.get("content"):
+            posted = _parse_date(tag["content"])
+            if posted: break
+
+    # 2. Elementos con atributos de tiempo
+    if not posted:
+        for el in soup.find_all(["time", "span", "div", "p", "td", "li"]):
+            # Atributo datetime
+            dt = el.get("datetime") or el.get("data-date") or el.get("data-published")
+            if dt:
+                posted = _parse_date(dt)
+                if posted: break
+            # Texto del elemento cerca de keywords de fecha
+            text_el = el.get_text(strip=True).lower()
+            if any(kw in text_el for kw in [
+                "posted:", "published:", "date posted", "date published",
+                "listed:", "added:", "publicado:", "fecha:"
+            ]):
+                posted = _parse_date(el.get_text(strip=True))
+                if posted: break
+
+    # 3. Buscar en texto completo con regex
+    if not posted:
+        raw = soup.get_text(" ", strip=True)
+        posted = _parse_date_from_text(raw)
+
+    # ── Texto completo para filtros ────────────────────────────────────────
     for tag in soup(["nav", "footer", "script", "style", "header"]):
         tag.decompose()
-    return soup.get_text(" ", strip=True)[:3000]  # máx 3000 chars
+    text = soup.get_text(" ", strip=True)[:4000]
+
+    return {"text": text, "posted": posted}
+
+
+# Meses en inglés y español para parsing de fechas
+_MONTHS = {
+    "jan":1,"feb":2,"mar":3,"apr":4,"may":5,"jun":6,
+    "jul":7,"aug":8,"sep":9,"oct":10,"nov":11,"dec":12,
+    "january":1,"february":2,"march":3,"april":4,"june":6,
+    "july":7,"august":8,"september":9,"october":10,"november":11,"december":12,
+    "ene":1,"feb":2,"mar":3,"abr":4,"may":5,"jun":6,
+    "jul":7,"ago":8,"sep":9,"oct":10,"nov":11,"dic":12,
+    "enero":1,"febrero":2,"marzo":3,"abril":4,"mayo":5,"junio":6,
+    "julio":7,"agosto":8,"septiembre":9,"octubre":10,"noviembre":11,"diciembre":12,
+}
+
+def _parse_date(s: str):
+    """Intenta parsear una fecha de un string y devuelve 'DD Mon YYYY' o None."""
+    if not s:
+        return None
+    s = s.strip()
+    try:
+        # ISO 8601: 2026-06-04T... o 2026-06-04
+        m = re.search(r'(\d{4})-(\d{2})-(\d{2})', s)
+        if m:
+            y, mo, d = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            if 2020 <= y <= 2030 and 1 <= mo <= 12 and 1 <= d <= 31:
+                import calendar
+                mon = list(calendar.month_abbr)[mo]
+                return f"{d:02d} {mon} {y}"
+        # "04 Jun 2026", "4th June 2026", "June 4, 2026"
+        m = re.search(
+            r'(\d{1,2})(?:st|nd|rd|th)?\s+([A-Za-z]+)\s+(\d{4})', s)
+        if m:
+            d, mon_str, y = int(m.group(1)), m.group(2).lower()[:3], int(m.group(3))
+            mo = _MONTHS.get(mon_str)
+            if mo and 2020 <= y <= 2030:
+                import calendar
+                mon_abbr = list(calendar.month_abbr)[mo]
+                return f"{d:02d} {mon_abbr} {y}"
+        m = re.search(
+            r'([A-Za-z]+)\s+(\d{1,2})(?:st|nd|rd|th)?,?\s+(\d{4})', s)
+        if m:
+            mon_str, d, y = m.group(1).lower()[:3], int(m.group(2)), int(m.group(3))
+            mo = _MONTHS.get(mon_str)
+            if mo and 2020 <= y <= 2030:
+                import calendar
+                mon_abbr = list(calendar.month_abbr)[mo]
+                return f"{d:02d} {mon_abbr} {y}"
+    except Exception:
+        pass
+    return None
+
+def _parse_date_from_text(text: str):
+    """Busca patrones de fecha en un bloque de texto."""
+    # Buscar cerca de keywords
+    for pattern in [
+        r'(?:posted|published|listed|added|date)[:\s]+(\d{1,2}(?:st|nd|rd|th)?\s+[A-Za-z]+\s+\d{4})',
+        r'(?:posted|published|listed|added|date)[:\s]+([A-Za-z]+\s+\d{1,2},?\s+\d{4})',
+        r'(?:posted|published|listed|added|date)[:\s]+(\d{4}-\d{2}-\d{2})',
+    ]:
+        m = re.search(pattern, text, re.IGNORECASE)
+        if m:
+            result = _parse_date(m.group(1))
+            if result:
+                return result
+    return None
 
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
 
 def score_job(title: str, description: str = "", job_url: str = "") -> dict:
     text = (title + " " + description).lower()
+    posted_date = None
 
     # Paso 1: chequeo rápido de rol con lo que tenemos del card
     is_engineer = any(kw in text for kw in ENGINEER_KEYWORDS)
@@ -255,12 +358,13 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
     if any(kw in text for kw in EXCLUDE_ROTATION_KEYWORDS) or _PERMANENT_RE.search(text):
         return {"passes": False}
 
-    # Paso 2: siempre entrar al detalle para leer salario, rotación y fecha
+    # Paso 2: entrar al detalle para leer todo — salario, rotación, fecha, publicación
     if job_url:
         detail = fetch_job_detail(job_url)
-        if detail:
-            detail_lower = detail.lower()
-            # Segundo chequeo con info completa
+        detail_text = detail["text"] if detail else ""
+        posted_date = detail["posted"] if detail else None
+        if detail_text:
+            detail_lower = detail_text.lower()
             if any(kw in detail_lower for kw in EXCLUDE_ROTATION_KEYWORDS) or _PERMANENT_RE.search(detail_lower):
                 return {"passes": False}
             text = text + " " + detail_lower
@@ -293,7 +397,13 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
     else:
         warnings.append("⚠️ Salario no especificado")
 
-    return {"passes": True, "tags": tags, "warnings": warnings, "salary": salary}
+    return {
+        "passes":  True,
+        "tags":    tags,
+        "warnings": warnings,
+        "salary":  salary,
+        "posted":  posted_date,   # fecha de publicación del anuncio
+    }
 
 # ─── HELPER GENÉRICO DE EXTRACCIÓN ─────────────────────────────────────────────
 
@@ -310,8 +420,14 @@ def _extract_jobs(soup, base_url, source, href_filters, title_min=8):
             desc   = a.parent.get_text(" ", strip=True) if a.parent else ""
             result = score_job(text, desc, job_url=href)
             if result["passes"]:
-                jobs.append({"title": text, "url": href, "source": source,
-                             "tags": result["tags"], "warnings": result["warnings"]})
+                jobs.append({
+                    "title":    text,
+                    "url":      href,
+                    "source":   source,
+                    "tags":     result["tags"],
+                    "warnings": result["warnings"],
+                    "posted":   result.get("posted"),
+                })
     return jobs[:15]
 
 # ─── SCRAPERS ORIGINALES ────────────────────────────────────────────────────────
@@ -334,7 +450,8 @@ def scrape_yotspot():
         result = score_job(title, card.get_text(" ", strip=True), job_url=href)
         if result["passes"]:
             jobs.append({"title": title, "url": href, "source": "Yotspot",
-                         "tags": result["tags"], "warnings": result["warnings"]})
+                         "tags": result["tags"], "warnings": result["warnings"],
+                         "posted": result.get("posted")})
     return jobs
 
 def scrape_crewnetwork():
@@ -488,7 +605,8 @@ def scrape_mycrewkit():
         result = score_job(text, parent_text, job_url=href)
         if result["passes"]:
             jobs.append({"title": text, "url": href, "source": "My Crew Kit",
-                         "tags": result["tags"], "warnings": result["warnings"]})
+                         "tags": result["tags"], "warnings": result["warnings"],
+                         "posted": result.get("posted")})
     return jobs[:15]
 
 
@@ -525,15 +643,21 @@ def _scrape_telegram(channel: str, source_label: str):
         lines = [l.strip() for l in full_text.splitlines() if l.strip()]
         title = lines[0][:120] if lines else full_text[:80]
 
-        # Link al mensaje específico en Telegram
+        # Link y fecha del mensaje en Telegram
         msg_link = msg.select_one("a.tgme_widget_message_date")
         href = msg_link["href"] if msg_link and msg_link.has_attr("href") else url
 
-        # Evaluar con el texto completo del post (sin entrar a detalle — es texto plano)
-        result = score_job(title, full_text)   # no job_url: el detalle ya está en full_text
+        # Fecha del mensaje desde el atributo datetime del time tag
+        tg_posted = None
+        time_el = msg.select_one("time")
+        if time_el and time_el.get("datetime"):
+            tg_posted = _parse_date(time_el["datetime"])
+
+        result = score_job(title, full_text)
         if result["passes"]:
             jobs.append({"title": title, "url": href, "source": source_label,
-                         "tags": result["tags"], "warnings": result["warnings"]})
+                         "tags": result["tags"], "warnings": result["warnings"],
+                         "posted": tg_posted or result.get("posted")})
 
     return jobs[:10]
 
