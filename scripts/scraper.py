@@ -793,5 +793,35 @@ def main():
     send_email(new_jobs)
     save_seen(new_seen)
 
+    # ── Actualizar docs/jobs.json para el viewer ──────────────────────────────
+    # Guardar TODOS los jobs encontrados hoy (no solo los nuevos)
+    # para que el viewer siempre tenga datos frescos aunque no se corra generate_viewer.py
+    json_path = Path("docs/jobs.json")
+    if json_path.parent.exists():
+        try:
+            KEEP_DAYS = 15
+            cutoff    = datetime.datetime.utcnow() - datetime.timedelta(days=KEEP_DAYS)
+            existing  = []
+            if json_path.exists():
+                data = json.loads(json_path.read_text(encoding="utf-8"))
+                for j in data.get("jobs", []):
+                    sat = j.get("seen_at", "")
+                    if sat:
+                        try:
+                            if datetime.datetime.fromisoformat(sat.replace("Z","")) > cutoff:
+                                existing.append(j)
+                        except Exception:
+                            pass
+            # Combinar: all_jobs frescos + histórico sin solapamiento
+            fresh_urls = {j["url"] for j in all_jobs}
+            combined   = all_jobs + [j for j in existing if j["url"] not in fresh_urls]
+            json_path.write_text(json.dumps(
+                {"generated_at": now_iso, "total": len(combined), "jobs": combined},
+                ensure_ascii=False
+            ), encoding="utf-8")
+            print(f"📦 jobs.json actualizado: {len(combined)} ofertas")
+        except Exception as e:
+            print(f"  ⚠ No se pudo actualizar jobs.json: {e}")
+
 if __name__ == "__main__":
     main()
