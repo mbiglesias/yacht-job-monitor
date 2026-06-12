@@ -359,6 +359,38 @@ def fetch_job_detail(url: str) -> dict:
 
     return {"text": text, "posted": posted}
 
+def _debug_salary_parse(text: str, title: str):
+    """Muestra TODOS los valores numéricos encontrados cerca de keywords de salario."""
+    text_norm = text.replace(",", "")
+    text_norm = re.sub(r'(\d+)\s*k\b', lambda m: str(int(m.group(1)) * 1000), text_norm, flags=re.IGNORECASE)
+    
+    def to_eur(val, currency):
+        if currency == "usd":  val = int(val * 0.92)
+        elif currency == "gbp": val = int(val * 1.17)
+        if val > 30000: val = val // 12
+        return val
+
+    all_found = []
+    patterns = [
+        (r'(?:EUR|€|euros?)\s*(\d{4,6})\+?',  "eur"),
+        (r'(\d{4,6})\+?\s*(?:EUR|€|euros?)',   "eur"),
+        (r'(?:USD|\$)\s*(\d{4,6})\+?',         "usd"),
+        (r'(\d{4,6})\+?\s*(?:USD|\$)',         "usd"),
+        (r'(?:GBP|£)\s*(\d{4,6})\+?',         "gbp"),
+        (r'(\d{4,6})\+?\s*(?:GBP|£)',         "gbp"),
+    ]
+    for pat, currency in patterns:
+        for m in re.finditer(pat, text_norm, re.IGNORECASE):
+            raw = int(m.group(1))
+            converted = to_eur(raw, currency)
+            context = text_norm[max(0,m.start()-20):m.end()+20].replace('\n',' ')
+            all_found.append((converted, currency, raw, context))
+    
+    if all_found:
+        print(f"      🔍 salary debug '{title[:40]}':")
+        for eur_val, cur, raw, ctx in sorted(all_found, reverse=True)[:5]:
+            print(f"         {raw} {cur} → {eur_val}€ | ...{ctx}...")
+
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
 
 def score_job(title: str, description: str = "", job_url: str = "") -> dict:
@@ -406,16 +438,13 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
         warnings.append("⚠️ Fecha de inicio no especificada")
 
     salary = _parse_salary_eur(text)
-    # Debug: mostrar qué encontró el parser de salario
-    if "bespoke" in (job_url or "").lower() or True:  # siempre por ahora
-        sal_ctx = re.findall(r'.{0,30}(?:salary|pay|wage|usd|eur|€|\$|£).{0,30}', text, re.IGNORECASE)
-        if sal_ctx:
-            print(f"      💰 salary context: {sal_ctx[:2]}")
+    # Debug temporal: mostrar todos los valores encontrados por el parser
+    _debug_salary_parse(text, title)
     if salary is not None:
         if salary >= SALARY_MIN_EUR:
             tags.append(f"💶 ~{salary:,}€/mes")
         else:
-            print(f"      ⚠ Descartado por salario bajo: {salary}€ | {title[:50]}")
+            print(f"      ⚠ Descartado salario bajo: {salary}€ | {title[:50]}")
             return {"passes": False}
     else:
         warnings.append("⚠️ Salario no especificado")
