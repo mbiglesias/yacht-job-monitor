@@ -7,6 +7,57 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap');
 
+  /* ── PASSWORD SCREEN ── */
+  #lock-screen {
+    position: fixed; inset: 0; z-index: 9999;
+    background: #0a2540;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Inter', sans-serif;
+  }
+  .lock-box {
+    background: #0f1e35;
+    border: 1px solid rgba(14,165,233,.2);
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%; max-width: 360px;
+    text-align: center;
+  }
+  .lock-icon { font-size: 36px; margin-bottom: 16px; }
+  .lock-box h2 {
+    color: #fff; font-family: 'Syne', sans-serif;
+    font-size: 20px; font-weight: 800; margin-bottom: 6px;
+  }
+  .lock-box p { color: #64748b; font-size: 13px; margin-bottom: 24px; }
+  .lock-input {
+    width: 100%;
+    background: rgba(255,255,255,.05);
+    border: 1.5px solid rgba(255,255,255,.1);
+    border-radius: 8px;
+    padding: 11px 14px;
+    color: #fff; font-size: 15px;
+    font-family: 'Inter', sans-serif;
+    outline: none; text-align: center;
+    letter-spacing: .1em;
+    transition: border-color .2s;
+    margin-bottom: 12px;
+  }
+  .lock-input:focus { border-color: #0ea5e9; }
+  .lock-btn {
+    width: 100%;
+    background: #0ea5e9; color: #fff;
+    border: none; border-radius: 8px;
+    padding: 11px; font-size: 15px;
+    font-weight: 600; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+    transition: background .15s;
+  }
+  .lock-btn:hover { background: #0284c7; }
+  .lock-error {
+    color: #f87171; font-size: 12px;
+    margin-top: 10px; min-height: 18px;
+  }
+  #app { display: none; }
+
   :root {
     --navy:    #0a2540;
     --navy2:   #0f3460;
@@ -352,6 +403,23 @@
 </head>
 <body>
 
+<!-- PASSWORD SCREEN -->
+<div id="lock-screen">
+  <div class="lock-box">
+    <div class="lock-icon">⚙️</div>
+    <h2>Yacht Engineer Jobs</h2>
+    <p>Ingresá la contraseña para acceder</p>
+    <input class="lock-input" type="password" id="pw-input"
+           placeholder="••••••••"
+           onkeydown="if(event.key==='Enter') checkPassword()">
+    <button class="lock-btn" onclick="checkPassword()">Entrar →</button>
+    <div class="lock-error" id="pw-error"></div>
+  </div>
+</div>
+
+<!-- APP (oculto hasta autenticación) -->
+<div id="app">
+
 <!-- HEADER -->
 <header>
   <div class="header-inner">
@@ -451,6 +519,56 @@
     </div>
   </div>
 </div>
+
+</div><!-- /app -->
+
+<script>
+// ── CONTRASEÑA ────────────────────────────────────────────────────────────────
+// Para cambiarla: modificar el valor de PASSWORD en generate_viewer.py
+// o directamente acá en viewer.html antes de subir al repo.
+// IMPORTANTE: esta protección es client-side — adecuada para uso interno.
+// No usar para datos altamente sensibles.
+const PASSWORD_HASH = window.PASSWORD_HASH || "";
+
+async function sha256(str) {
+  const buf = await crypto.subtle.digest("SHA-256",
+    new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf))
+    .map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+async function checkPassword() {
+  const val = document.getElementById("pw-input").value;
+  const err = document.getElementById("pw-error");
+  if (!val) { err.textContent = "Ingresá la contraseña"; return; }
+
+  const hash = await sha256(val);
+  if (hash === PASSWORD_HASH) {
+    // Guardar en sessionStorage para no pedir de nuevo en la misma sesión
+    sessionStorage.setItem("yacht_auth", hash);
+    document.getElementById("lock-screen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    init();
+  } else {
+    err.textContent = "Contraseña incorrecta";
+    document.getElementById("pw-input").value = "";
+    document.getElementById("pw-input").focus();
+    // Pequeño delay para desincentivar fuerza bruta
+    await new Promise(r => setTimeout(r, 800));
+  }
+}
+
+// Auto-login si ya autenticó en esta sesión
+(async () => {
+  const saved = sessionStorage.getItem("yacht_auth");
+  if (saved && saved === PASSWORD_HASH) {
+    document.getElementById("lock-screen").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    // init() se llama después de que carguen los datos
+    document.addEventListener("DOMContentLoaded", () => init());
+  }
+})();
+</script>
 
 <script>
 // ── DATOS ────────────────────────────────────────────────────────────────────

@@ -2,17 +2,15 @@
 """
 generate_viewer.py
 Corre el scraper, recolecta los resultados y los inyecta en viewer.html
-para generar un archivo viewer_output.html que puede compartirse.
+para generar docs/index.html con contraseña.
 
-Uso:
-    python generate_viewer.py
-
-El archivo resultante es viewer_output.html — abrir en cualquier navegador.
+La contraseña se configura en el secret VIEWER_PASSWORD de GitHub Actions.
+Si no está configurado, el viewer queda sin contraseña.
 """
 
 import json
+import hashlib
 import datetime
-import subprocess
 import sys
 import os
 from pathlib import Path
@@ -79,6 +77,15 @@ for j in all_jobs:
 
 print(f"\n✅ {len(unique_jobs)} ofertas únicas encontradas")
 
+# ── Hash de contraseña ────────────────────────────────────────────────────────
+password = os.environ.get("VIEWER_PASSWORD", "")
+if password:
+    pw_hash = hashlib.sha256(password.encode()).hexdigest()
+    print(f"🔒 Viewer protegido con contraseña")
+else:
+    pw_hash = ""
+    print(f"⚠️  Sin contraseña (VIEWER_PASSWORD no configurado)")
+
 # ── Inyectar en el HTML ───────────────────────────────────────────────────────
 viewer_template = (SCRIPT_DIR / "viewer.html").read_text(encoding="utf-8")
 now_iso = datetime.datetime.utcnow().isoformat() + "Z"
@@ -88,13 +95,16 @@ injection = f"""
 <script>
 window.JOBS_DATA = {jobs_json};
 window.GENERATED_AT = "{now_iso}";
+window.PASSWORD_HASH = "{pw_hash}";
 </script>
 """
 
 # Insertar antes del cierre de </head>
 output_html = viewer_template.replace("</head>", injection + "\n</head>", 1)
 
-output_path = SCRIPT_DIR / "viewer_output.html"
+# Guardar en docs/index.html para GitHub Pages
+output_path = SCRIPT_DIR / "docs" / "index.html"
+output_path.parent.mkdir(exist_ok=True)
 output_path.write_text(output_html, encoding="utf-8")
 print(f"📄 Viewer generado: {output_path}")
-print("   Abrí viewer_output.html en tu navegador para ver todas las ofertas.")
+print(f"   URL: https://TU_USUARIO.github.io/yacht-job-monitor/")
