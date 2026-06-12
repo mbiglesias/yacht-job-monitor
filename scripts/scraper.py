@@ -570,19 +570,27 @@ def scrape_findacrew():
     return []
 
 def scrape_yacrew():
-    # 404 → /error/. Probar variantes
-    for url in [
-        "https://www.yacrew.com/vacancies",
-        "https://www.yacrew.com/jobs",
-        "https://www.yacrew.com/en/jobs",
-    ]:
+    # URL correcta: /engineering-yacht-jobs/
+    # También scrapear páginas de agencias específicas en YaCrew
+    all_jobs = []
+    urls = [
+        "https://www.yacrew.com/engineering-yacht-jobs/",
+        "https://www.yacrew.com/jobs/wilsonhalligan/",   # 44 jobs activos de Wilsonhalligan
+        "https://www.yacrew.com/jobs/saltwater/",
+        "https://www.yacrew.com/jobs/bespoke-crew/",
+    ]
+    seen = set()
+    for url in urls:
         html = get(url)
         if not html: continue
         soup = BeautifulSoup(html, "html.parser")
-        jobs = _extract_jobs(soup, "https://www.yacrew.com",
-                             "YaCrew", ["/job", "/vacancy", "/vacanc"])
-        if jobs: return jobs
-    return []
+        found = _extract_jobs(soup, "https://www.yacrew.com",
+                             "YaCrew", ["/job", "/vacancy", "/vacanc", "/jobs/"])
+        for j in found:
+            if j["url"] not in seen:
+                seen.add(j["url"])
+                all_jobs.append(j)
+    return all_jobs[:30]
 
 def scrape_saltwater():
     # Log: 657KB — la página TIENE las ofertas en texto pero los links son JS.
@@ -734,6 +742,14 @@ def scrape_xelvin():
                              "Xelvin", ["/vacature/", "/vacancy/", "/job/", "/jobs/"])
         if jobs: return jobs
     return []
+
+def scrape_crewseekers():
+    """Crewseekers — plataforma veterana de crew para yates, gratis para buscar"""
+    html = get("https://www.crewseekers.net/vacancy_list.cfm?type=motor")
+    soup = BeautifulSoup(html, "html.parser") if html else None
+    if not soup: return []
+    return _extract_jobs(soup, "https://www.crewseekers.net",
+                         "Crewseekers", ["/vacancy", "/job", "cfm?"])
 
 def scrape_mycrewkit():
     html = get("https://mycrewkit.com/superyacht-jobs/engineer/")
@@ -995,6 +1011,7 @@ def main():
         scrape_saltwater, scrape_crewin, scrape_faststream, scrape_ypicrew,
         scrape_mycrewkit, scrape_bespokecrew, scrape_wilsonhalligan,
         scrape_quaycrew, scrape_northropjohnson, scrape_xelvin,
+        scrape_crewseekers,
         scrape_telegram_seamenjob, scrape_telegram_marinepublic,
         scrape_linkedin_rss,
     ]
