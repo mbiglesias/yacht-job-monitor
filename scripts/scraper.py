@@ -205,6 +205,8 @@ _MONTHS = {
 def _parse_date(s: str):
     if not s: return None
     s = s.strip()
+    # Strip common prefixes like "Posted: ", "Published: "
+    s = re.sub(r'^(?:posted|published|listed|added|date)[:\s]+', '', s, flags=re.IGNORECASE).strip()
     try:
         m = re.search(r'(\d{4})-(\d{2})-(\d{2})', s)
         if m:
@@ -225,6 +227,30 @@ def _parse_date(s: str):
                 return f"{d:02d} {list(calendar.month_abbr)[mo]} {y}"
     except Exception:
         pass
+    return None
+
+def _parse_relative_date(s: str):
+    """Convierte 'X days ago', 'X weeks ago', 'yesterday', 'today' a fecha absoluta."""
+    if not s: return None
+    t = s.lower().strip()
+    today = datetime.datetime.utcnow()
+    m = re.search(r'(\d+)\s+day', t)
+    if m:
+        d = today - datetime.timedelta(days=int(m.group(1)))
+        return f"{d.day:02d} {list(calendar.month_abbr)[d.month]} {d.year}"
+    m = re.search(r'(\d+)\s+week', t)
+    if m:
+        d = today - datetime.timedelta(weeks=int(m.group(1)))
+        return f"{d.day:02d} {list(calendar.month_abbr)[d.month]} {d.year}"
+    m = re.search(r'(\d+)\s+month', t)
+    if m:
+        d = today - datetime.timedelta(days=int(m.group(1)) * 30)
+        return f"{d.day:02d} {list(calendar.month_abbr)[d.month]} {d.year}"
+    if "yesterday" in t:
+        d = today - datetime.timedelta(days=1)
+        return f"{d.day:02d} {list(calendar.month_abbr)[d.month]} {d.year}"
+    if "today" in t or "just now" in t or "hours ago" in t or "minutes ago" in t:
+        return f"{today.day:02d} {list(calendar.month_abbr)[today.month]} {today.year}"
     return None
 
 def _parse_date_from_text(text: str):
@@ -274,29 +300,63 @@ def fetch_job_detail(url: str) -> dict:
         return {"text": "", "posted": None}
     soup = BeautifulSoup(html, "html.parser")
     posted = None
-    # 1. Meta tags
+
+    # 1. Meta tags (más confiables)
     for meta_name in ["article:published_time", "datePublished", "date", "publish_date"]:
         tag = soup.find("meta", property=meta_name) or soup.find("meta", attrs={"name": meta_name})
         if tag and tag.get("content"):
             posted = _parse_date(tag["content"])
             if posted: break
-    # 2. Time elements
+
+    # 2. Elementos <time> con datetime attribute
     if not posted:
-        for el in soup.find_all(["time", "span", "div", "p", "td", "li"]):
-            dt = el.get("datetime") or el.get("data-date") or el.get("data-published")
+        for el in soup.find_all("time"):
+            dt = el.get("datetime") or el.get_text(strip=True)
             if dt:
-                posted = _parse_date(dt)
+                posted = _parse_date(dt) or _parse_relative_date(dt)
                 if posted: break
-            text_el = el.get_text(strip=True).lower()
-            if any(kw in text_el for kw in ["posted:", "published:", "date posted",
-                                              "date published", "listed:", "added:"]):
-                posted = _parse_date(el.get_text(strip=True))
+
+    # 3. Elementos con data-date / data-published
+    if not posted:
+        for el in soup.find_all(attrs={"data-date": True}):
+            posted = _parse_date(el["data-date"]) or _parse_relative_date(el["data-date"])
+            if posted: break
+        for el in soup.find_all(attrs={"data-published": True}):
+            posted = _parse_date(el["data-published"]) or _parse_relative_date(el["data-published"])
+            if posted: break
+
+    # 4. Texto cerca de keywords de fecha (incluyendo fechas relativas)
+    if not posted:
+        for el in soup.find_all(["span", "div", "p", "td", "li", "abbr", "small"]):
+            raw = el.get_text(strip=True)
+            raw_lo = raw.lower()
+            # Fecha absoluta cerca de keyword
+            if any(kw in raw_lo for kw in ["posted:", "published:", "date posted",
+                                            "date published", "listed:", "added:",
+                                            "publicado:", "fecha:"]):
+                posted = _parse_date(raw) or _parse_relative_date(raw)
                 if posted: break
+            # Fecha relativa suelta: "2 days ago", "1 week ago"
+            if re.search(r'\b\d+\s+(?:day|week|month)s?\s+ago\b', raw_lo):
+                posted = _parse_relative_date(raw)
+                if posted: break
+            if raw_lo in ("today", "yesterday"):
+                posted = _parse_relative_date(raw)
+                if posted: break
+
+    # 5. Texto completo del body
     for tag in soup(["nav", "footer", "script", "style", "header"]):
         tag.decompose()
     text = soup.get_text(" ", strip=True)[:5000]
+
     if not posted:
         posted = _parse_date_from_text(text)
+    if not posted:
+        # Último intento: buscar fechas relativas en texto completo
+        m = re.search(r'\b(\d+\s+(?:day|week|month)s?\s+ago|yesterday|today)\b', text, re.IGNORECASE)
+        if m:
+            posted = _parse_relative_date(m.group(1))
+
     return {"text": text, "posted": posted}
 
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
@@ -799,7 +859,7 @@ def main():
     json_path = Path("docs/jobs.json")
     if json_path.parent.exists():
         try:
-            KEEP_DAYS = 15
+            KEEP_DAYS = 30
             cutoff    = datetime.datetime.utcnow() - datetime.timedelta(days=KEEP_DAYS)
             existing  = []
             if json_path.exists():
