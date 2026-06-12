@@ -90,7 +90,33 @@ else:
 viewer_template = (SCRIPT_DIR / "viewer.html").read_text(encoding="utf-8")
 now_iso = datetime.datetime.utcnow().isoformat() + "Z"
 
-jobs_json = json.dumps(unique_jobs, ensure_ascii=False, indent=2)
+# Acumular ofertas de los últimos 15 días
+KEEP_DAYS = 15
+cutoff = datetime.datetime.utcnow() - datetime.timedelta(days=KEEP_DAYS)
+json_path = SCRIPT_DIR / "docs" / "jobs.json"
+
+existing_jobs = []
+if json_path.exists():
+    try:
+        existing_data = json.loads(json_path.read_text(encoding="utf-8"))
+        existing_jobs = [
+            j for j in existing_data.get("jobs", [])
+            if j.get("seen_at") and
+               datetime.datetime.fromisoformat(j["seen_at"].replace("Z","")) > cutoff
+        ]
+    except Exception as e:
+        print(f"  ⚠ No se pudo leer jobs.json existente: {e}")
+
+# Combinar nuevos + histórico, deduplicar por URL
+all_url_seen = set()
+combined = []
+for j in unique_jobs + existing_jobs:
+    if j["url"] not in all_url_seen:
+        combined.append(j)
+        all_url_seen.add(j["url"])
+print(f"📦 Total combinado (últimos {KEEP_DAYS} días): {len(combined)} ofertas")
+
+jobs_json = json.dumps(combined, ensure_ascii=False, indent=2)
 injection = f"""
 <script>
 window.JOBS_DATA = {jobs_json};
@@ -99,23 +125,17 @@ window.PASSWORD_HASH = "{pw_hash}";
 </script>
 """
 
-# Insertar antes del cierre de </head>
 output_html = viewer_template.replace("</head>", injection + "\n</head>", 1)
 
-# ── Guardar docs/index.html (viewer con datos embebidos) ─────────────────────
+# Guardar docs/index.html para GitHub Pages
 output_path = SCRIPT_DIR / "docs" / "index.html"
 output_path.parent.mkdir(exist_ok=True)
 output_path.write_text(output_html, encoding="utf-8")
 
-# ── Guardar docs/jobs.json (para carga dinámica futura) ──────────────────────
-jobs_data = {
-    "generated_at": now_iso,
-    "total": len(unique_jobs),
-    "jobs": unique_jobs,
-}
-json_path = SCRIPT_DIR / "docs" / "jobs.json"
+# Guardar docs/jobs.json acumulado
+jobs_data = {"generated_at": now_iso, "total": len(combined), "jobs": combined}
 json_path.write_text(json.dumps(jobs_data, ensure_ascii=False, indent=2), encoding="utf-8")
 
 print(f"📄 Viewer generado: {output_path}")
-print(f"📦 JSON generado:   {json_path}  ({len(unique_jobs)} ofertas)")
+print(f"📦 JSON generado:   {json_path}  ({len(combined)} ofertas)")
 print(f"   URL: https://TU_USUARIO.github.io/yacht-job-monitor/")
