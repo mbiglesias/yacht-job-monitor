@@ -99,11 +99,29 @@ existing_jobs = []
 if json_path.exists():
     try:
         existing_data = json.loads(json_path.read_text(encoding="utf-8"))
-        existing_jobs = [
+        raw_existing = [
             j for j in existing_data.get("jobs", [])
             if j.get("seen_at") and
                datetime.datetime.fromisoformat(j["seen_at"].replace("Z","")) > cutoff
         ]
+        # Re-filtrar el histórico: descartar cualquier job que tenga salario explícito < 6000€
+        # Esto limpia los falsos positivos de versiones anteriores del scraper
+        SALARY_MIN = 6000
+        import re as _re
+        def _salary_from_tags(tags):
+            for t in (tags or []):
+                m = _re.search(r'~([\d,]+)€', t)
+                if m:
+                    return int(m.group(1).replace(',',''))
+            return None
+
+        for j in raw_existing:
+            sal = _salary_from_tags(j.get("tags", []))
+            if sal is not None and sal < SALARY_MIN:
+                continue  # tenía salario explícito bajo → descartar del histórico
+            existing_jobs.append(j)
+
+        print(f"  Histórico: {len(raw_existing)} → {len(existing_jobs)} después de re-filtrar")
     except Exception as e:
         print(f"  ⚠ No se pudo leer jobs.json existente: {e}")
 
