@@ -406,11 +406,17 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
         warnings.append("⚠️ Fecha de inicio no especificada")
 
     salary = _parse_salary_eur(text)
+    # Debug: mostrar qué encontró el parser de salario
+    if "bespoke" in (job_url or "").lower() or True:  # siempre por ahora
+        sal_ctx = re.findall(r'.{0,30}(?:salary|pay|wage|usd|eur|€|\$|£).{0,30}', text, re.IGNORECASE)
+        if sal_ctx:
+            print(f"      💰 salary context: {sal_ctx[:2]}")
     if salary is not None:
         if salary >= SALARY_MIN_EUR:
             tags.append(f"💶 ~{salary:,}€/mes")
         else:
-            return {"passes": False}    # salario explícito pero bajo → DESCARTAR siempre
+            print(f"      ⚠ Descartado por salario bajo: {salary}€ | {title[:50]}")
+            return {"passes": False}
     else:
         warnings.append("⚠️ Salario no especificado")
 
