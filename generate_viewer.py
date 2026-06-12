@@ -102,9 +102,20 @@ window.PASSWORD_HASH = "{pw_hash}";
 # Insertar antes del cierre de </head>
 output_html = viewer_template.replace("</head>", injection + "\n</head>", 1)
 
-# Guardar en docs/index.html para GitHub Pages
+# ── Guardar docs/index.html (viewer con datos embebidos) ─────────────────────
 output_path = SCRIPT_DIR / "docs" / "index.html"
 output_path.parent.mkdir(exist_ok=True)
 output_path.write_text(output_html, encoding="utf-8")
+
+# ── Guardar docs/jobs.json (para carga dinámica futura) ──────────────────────
+jobs_data = {
+    "generated_at": now_iso,
+    "total": len(unique_jobs),
+    "jobs": unique_jobs,
+}
+json_path = SCRIPT_DIR / "docs" / "jobs.json"
+json_path.write_text(json.dumps(jobs_data, ensure_ascii=False, indent=2), encoding="utf-8")
+
 print(f"📄 Viewer generado: {output_path}")
+print(f"📦 JSON generado:   {json_path}  ({len(unique_jobs)} ofertas)")
 print(f"   URL: https://TU_USUARIO.github.io/yacht-job-monitor/")

@@ -571,12 +571,6 @@ async function checkPassword() {
 </script>
 
 <script>
-// ── DATOS ────────────────────────────────────────────────────────────────────
-// Este archivo es generado automáticamente por el scraper.
-// Para actualizar: ejecutar generate_viewer.py o pegar los datos manualmente.
-const JOBS_DATA = window.JOBS_DATA || [];
-const GENERATED_AT = window.GENERATED_AT || null;
-
 // ── SOURCE ICONS ─────────────────────────────────────────────────────────────
 const SOURCE_ICONS = {
   "Yotspot": "YS", "Crew Network": "CN", "Bluewater Yachting": "BW",
@@ -594,7 +588,33 @@ let activeSources = new Set();
 let currentSort = 'default';
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
+async function loadData() {
+  // Si los datos ya están embebidos (generados por generate_viewer.py), usarlos
+  if (window.JOBS_DATA && window.JOBS_DATA.length > 0) {
+    return { jobs: window.JOBS_DATA, generated_at: window.GENERATED_AT };
+  }
+  // Si no hay datos embebidos, intentar cargar jobs.json desde el mismo servidor
+  try {
+    const res = await fetch("jobs.json");
+    if (res.ok) {
+      const data = await res.json();
+      return { jobs: data.jobs || [], generated_at: data.generated_at };
+    }
+  } catch(e) {
+    console.warn("No se pudo cargar jobs.json:", e);
+  }
+  return { jobs: [], generated_at: null };
+}
+
 function init() {
+  loadData().then(({ jobs, generated_at }) => {
+    window._JOBS   = jobs;
+    window._GEN_AT = generated_at;
+    _initUI(jobs, generated_at);
+  });
+}
+
+function _initUI(JOBS_DATA, GENERATED_AT) {
   if (GENERATED_AT) {
     const d = new Date(GENERATED_AT);
     document.getElementById('updated-at').textContent =
@@ -648,7 +668,7 @@ function filterJobs() { renderJobs(); }
 
 function renderJobs() {
   const q = document.getElementById('search').value.toLowerCase();
-  let jobs = [...JOBS_DATA];
+  let jobs = [...(window._JOBS || [])];
 
   // Source filter
   if (activeSources.size > 0) {
