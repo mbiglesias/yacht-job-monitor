@@ -188,7 +188,15 @@ def _parse_salary_eur(text: str):
                     continue
                 found.append(to_eur(int(m.group(1)), currency))
 
-    return max(found) if found else None
+    # Usar el MÍNIMO de los valores encontrados en salary context.
+    # Razón: si hay valores de distintos jobs en la misma página (contaminación),
+    # el salario real del job actual es el más bajo (los otros son de otros anuncios).
+    # Esto puede subestimar en rangos "6500-8000" pero es más seguro que sobreestimar.
+    if salary_windows:
+        return min(found) if found else None
+    
+    # Sin keywords de salario: no reportar
+    return None
 
 # ─── DATE PARSER ───────────────────────────────────────────────────────────────
 
@@ -308,7 +316,7 @@ def fetch_job_detail(url: str) -> dict:
             posted = _parse_date(tag["content"])
             if posted: break
 
-    # 2. Elementos <time> con datetime attribute
+    # 2. Elementos <time>
     if not posted:
         for el in soup.find_all("time"):
             dt = el.get("datetime") or el.get_text(strip=True)
@@ -316,7 +324,7 @@ def fetch_job_detail(url: str) -> dict:
                 posted = _parse_date(dt) or _parse_relative_date(dt)
                 if posted: break
 
-    # 3. Elementos con data-date / data-published
+    # 3. data-date / data-published
     if not posted:
         for el in soup.find_all(attrs={"data-date": True}):
             posted = _parse_date(el["data-date"]) or _parse_relative_date(el["data-date"])
@@ -325,18 +333,15 @@ def fetch_job_detail(url: str) -> dict:
             posted = _parse_date(el["data-published"]) or _parse_relative_date(el["data-published"])
             if posted: break
 
-    # 4. Texto cerca de keywords de fecha (incluyendo fechas relativas)
+    # 4. Texto cerca de keywords de fecha
     if not posted:
         for el in soup.find_all(["span", "div", "p", "td", "li", "abbr", "small"]):
             raw = el.get_text(strip=True)
             raw_lo = raw.lower()
-            # Fecha absoluta cerca de keyword
             if any(kw in raw_lo for kw in ["posted:", "published:", "date posted",
-                                            "date published", "listed:", "added:",
-                                            "publicado:", "fecha:"]):
+                                            "date published", "listed:", "added:"]):
                 posted = _parse_date(raw) or _parse_relative_date(raw)
                 if posted: break
-            # Fecha relativa suelta: "2 days ago", "1 week ago"
             if re.search(r'\b\d+\s+(?:day|week|month)s?\s+ago\b', raw_lo):
                 posted = _parse_relative_date(raw)
                 if posted: break
@@ -344,52 +349,23 @@ def fetch_job_detail(url: str) -> dict:
                 posted = _parse_relative_date(raw)
                 if posted: break
 
-    # 5. Texto completo del body
     for tag in soup(["nav", "footer", "script", "style", "header"]):
         tag.decompose()
-    text = soup.get_text(" ", strip=True)[:5000]
+    full_text = soup.get_text(" ", strip=True)
 
     if not posted:
-        posted = _parse_date_from_text(text)
+        posted = _parse_date_from_text(full_text[:2000])
     if not posted:
-        # Último intento: buscar fechas relativas en texto completo
-        m = re.search(r'\b(\d+\s+(?:day|week|month)s?\s+ago|yesterday|today)\b', text, re.IGNORECASE)
+        m = re.search(r'\b(\d+\s+(?:day|week|month)s?\s+ago|yesterday|today)\b',
+                      full_text[:2000], re.IGNORECASE)
         if m:
             posted = _parse_relative_date(m.group(1))
 
+    # IMPORTANTE: limitar el texto a los primeros 2000 chars
+    # Evita que jobs adyacentes en la página contaminen el salario de este job
+    text = full_text[:2000]
+
     return {"text": text, "posted": posted}
-
-def _debug_salary_parse(text: str, title: str):
-    """Muestra TODOS los valores numéricos encontrados cerca de keywords de salario."""
-    text_norm = text.replace(",", "")
-    text_norm = re.sub(r'(\d+)\s*k\b', lambda m: str(int(m.group(1)) * 1000), text_norm, flags=re.IGNORECASE)
-    
-    def to_eur(val, currency):
-        if currency == "usd":  val = int(val * 0.92)
-        elif currency == "gbp": val = int(val * 1.17)
-        if val > 30000: val = val // 12
-        return val
-
-    all_found = []
-    patterns = [
-        (r'(?:EUR|€|euros?)\s*(\d{4,6})\+?',  "eur"),
-        (r'(\d{4,6})\+?\s*(?:EUR|€|euros?)',   "eur"),
-        (r'(?:USD|\$)\s*(\d{4,6})\+?',         "usd"),
-        (r'(\d{4,6})\+?\s*(?:USD|\$)',         "usd"),
-        (r'(?:GBP|£)\s*(\d{4,6})\+?',         "gbp"),
-        (r'(\d{4,6})\+?\s*(?:GBP|£)',         "gbp"),
-    ]
-    for pat, currency in patterns:
-        for m in re.finditer(pat, text_norm, re.IGNORECASE):
-            raw = int(m.group(1))
-            converted = to_eur(raw, currency)
-            context = text_norm[max(0,m.start()-20):m.end()+20].replace('\n',' ')
-            all_found.append((converted, currency, raw, context))
-    
-    if all_found:
-        print(f"      🔍 salary debug '{title[:40]}':")
-        for eur_val, cur, raw, ctx in sorted(all_found, reverse=True)[:5]:
-            print(f"         {raw} {cur} → {eur_val}€ | ...{ctx}...")
 
 # ─── FILTRO CENTRAL ────────────────────────────────────────────────────────────
 
@@ -438,13 +414,10 @@ def score_job(title: str, description: str = "", job_url: str = "") -> dict:
         warnings.append("⚠️ Fecha de inicio no especificada")
 
     salary = _parse_salary_eur(text)
-    # Debug temporal: mostrar todos los valores encontrados por el parser
-    _debug_salary_parse(text, title)
     if salary is not None:
         if salary >= SALARY_MIN_EUR:
             tags.append(f"💶 ~{salary:,}€/mes")
         else:
-            print(f"      ⚠ Descartado salario bajo: {salary}€ | {title[:50]}")
             return {"passes": False}
     else:
         warnings.append("⚠️ Salario no especificado")
