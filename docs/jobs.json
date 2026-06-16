@@ -1,7 +1,22 @@
 {
-  "generated_at": "2026-06-16T12:51:56.030719Z",
-  "total": 9,
+  "generated_at": "2026-06-16T20:13:10.155263Z",
+  "total": 11,
   "jobs": [
+    {
+      "title": "Chief Engineer - 53m Private Sailing Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-engineer-53m-private-sailing-yacht",
+      "source": "Bluewater Yachting",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-16T20:13:10.155263Z"
+    },
     {
       "title": "Chief or Second Engineer 3000 KW CoC",
       "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-or-second-engineer-3000-kw-coc",
@@ -15,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "5 years as C/E or 2nd Engineer",
@@ -30,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -45,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -60,7 +75,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "Chief Engineer 45m+ MY",
@@ -75,7 +90,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "Chief Engineer",
@@ -90,7 +105,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "Engineer Jobs",
@@ -105,7 +120,22 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-16T12:51:56.030719Z"
+      "seen_at": "2026-06-16T20:13:10.155263Z"
+    },
+    {
+      "title": "Tender Engineer",
+      "url": "https://bespokecrew.com/jobs/tenderengineer/",
+      "source": "Bespoke Crew",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation",
+        "📅 Inicio ~2 meses"
+      ],
+      "warnings": [
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "16 Jun 2026",
+      "seen_at": "2026-06-16T20:13:10.155263Z"
     },
     {
       "title": "Chief Engineer",
