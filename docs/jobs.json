@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-17T12:15:00.885166Z",
+  "generated_at": "2026-06-17T19:25:44.252974Z",
   "total": 11,
   "jobs": [
     {
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-17T12:15:00.885166Z"
+      "seen_at": "2026-06-17T19:25:44.252974Z"
     },
     {
       "title": "Chief or Second Engineer 3000 KW CoC",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-17T12:15:00.885166Z"
+      "seen_at": "2026-06-17T19:25:44.252974Z"
     },
     {
       "title": "5 years as C/E or 2nd Engineer",
@@ -45,7 +45,22 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-17T12:15:00.885166Z"
+      "seen_at": "2026-06-17T19:25:44.252974Z"
+    },
+    {
+      "title": "Engineer Jobs",
+      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
+      "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-17T19:25:44.252974Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -96,21 +111,6 @@
       "title": "Chief Engineer",
       "url": "https://www.faststream.com/jobs/superyacht-jobs/?department=engineering#chief-engineer",
       "source": "Faststream",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-17T12:15:00.885166Z"
-    },
-    {
-      "title": "Engineer Jobs",
-      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
-      "source": "My Crew Kit",
       "tags": [
         "⚙️ Engineer"
       ],
