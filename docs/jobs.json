@@ -1,10 +1,10 @@
 {
-  "generated_at": "2026-06-18T19:30:35.534700Z",
-  "total": 13,
+  "generated_at": "2026-06-19T12:04:56.095648Z",
+  "total": 15,
   "jobs": [
     {
-      "title": "Chief Engineer - 53m Private Sailing Yacht",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-engineer-53m-private-sailing-yacht",
+      "title": "STCW , ENG1, 2nd Engineer Unlimited",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#stcw-eng1-2nd-engineer-unlimited",
       "source": "Bluewater Yachting",
       "tags": [
         "⚙️ Engineer"
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-18T19:30:35.534700Z"
+      "seen_at": "2026-06-19T12:04:56.095648Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-18T19:30:35.534700Z"
+      "seen_at": "2026-06-19T12:04:56.095648Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-18T19:30:35.534700Z"
+      "seen_at": "2026-06-19T12:04:56.095648Z"
     },
     {
       "title": "Chief Engineer 45m+ MY",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-18T19:30:35.534700Z"
+      "seen_at": "2026-06-19T12:04:56.095648Z"
     },
     {
       "title": "Chief Engineer",
@@ -75,12 +75,42 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-18T19:30:35.534700Z"
+      "seen_at": "2026-06-19T12:04:56.095648Z"
     },
     {
       "title": "Engineer Jobs",
       "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
       "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-19T12:04:56.095648Z"
+    },
+    {
+      "title": "👤 2nd Engineer to join Reefer vessel (9170 kW) 6700$ 📋 Дата посадки: 15.07.2026 Контракт: 4 +/- 1 months Зарплата: 6700 ",
+      "url": "https://t.me/seamenjob/102724",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "19 Jun 2026",
+      "seen_at": "2026-06-19T12:04:56.095648Z"
+    },
+    {
+      "title": "Chief Engineer - 53m Private Sailing Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-engineer-53m-private-sailing-yacht",
+      "source": "Bluewater Yachting",
       "tags": [
         "⚙️ Engineer"
       ],
