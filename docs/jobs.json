@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-06-24T10:48:09.921668Z",
-  "total": 20,
+  "generated_at": "2026-06-24T18:52:44.940680Z",
+  "total": 21,
   "jobs": [
     {
       "title": "2nd Engineer - 56m Private Motor Yacht",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-24T10:48:09.921668Z"
+      "seen_at": "2026-06-24T18:52:44.940680Z"
     },
     {
       "title": "SV 2nd Engineer or Commercial CoC III/1(MN) or yacht III/3 (Y3)",
@@ -30,22 +30,7 @@
         "⚠️ Fecha de inicio no especificada"
       ],
       "posted": null,
-      "seen_at": "2026-06-24T10:48:09.921668Z"
-    },
-    {
-      "title": "2nd Engineer - 55m+ Private Motor Yacht",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-55m-private-motor-yacht",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-24T10:48:09.921668Z"
+      "seen_at": "2026-06-24T18:52:44.940680Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -60,12 +45,42 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-06-24T10:48:09.921668Z"
+      "seen_at": "2026-06-24T18:52:44.940680Z"
     },
     {
       "title": "Engineer Jobs",
       "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
       "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-24T18:52:44.940680Z"
+    },
+    {
+      "title": "👤 Electrical engineer (ETO) 📋 В СК требуется электромеханик. Тип судна Волго-Дон. Флаг РФ. Район плавания Каспий. Опыт р",
+      "url": "https://t.me/seamenjob/102908",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "24 Jun 2026",
+      "seen_at": "2026-06-24T18:52:44.940680Z"
+    },
+    {
+      "title": "2nd Engineer - 55m+ Private Motor Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-55m-private-motor-yacht",
+      "source": "Bluewater Yachting",
       "tags": [
         "⚙️ Engineer"
       ],
