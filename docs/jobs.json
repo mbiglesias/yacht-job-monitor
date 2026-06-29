@@ -1,7 +1,37 @@
 {
-  "generated_at": "2026-06-28T18:06:06.885907Z",
+  "generated_at": "2026-06-29T12:30:50.032410Z",
   "total": 23,
   "jobs": [
+    {
+      "title": "CHIEF ENGINEER",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-29T12:30:50.032410Z"
+    },
+    {
+      "title": "Engineer Jobs",
+      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
+      "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-06-29T12:30:50.032410Z"
+    },
     {
       "title": "2nd Engineer - 56m Private Motor Yacht",
       "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-56m-private-motor-yacht",
@@ -28,36 +58,6 @@
       "warnings": [
         "⚠️ Rotación no mencionada",
         "⚠️ Fecha de inicio no especificada"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-28T18:06:06.885907Z"
-    },
-    {
-      "title": "CHIEF ENGINEER",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-28T18:06:06.885907Z"
-    },
-    {
-      "title": "Engineer Jobs",
-      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
-      "source": "My Crew Kit",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
       ],
       "posted": null,
       "seen_at": "2026-06-28T18:06:06.885907Z"
