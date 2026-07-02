@@ -1,22 +1,7 @@
 {
-  "generated_at": "2026-07-02T10:37:03.530156Z",
+  "generated_at": "2026-07-02T18:26:05.927558Z",
   "total": 24,
   "jobs": [
-    {
-      "title": "STCW , ENG1, 2nd Engineer Unlimited",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#stcw-eng1-2nd-engineer-unlimited",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-02T10:37:03.530156Z"
-    },
     {
       "title": "CHIEF ENGINEER",
       "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
@@ -30,12 +15,27 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-02T10:37:03.530156Z"
+      "seen_at": "2026-07-02T18:26:05.927558Z"
     },
     {
       "title": "Engineer Jobs",
       "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
       "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-02T18:26:05.927558Z"
+    },
+    {
+      "title": "STCW , ENG1, 2nd Engineer Unlimited",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#stcw-eng1-2nd-engineer-unlimited",
+      "source": "Bluewater Yachting",
       "tags": [
         "⚙️ Engineer"
       ],
