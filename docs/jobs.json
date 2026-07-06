@@ -1,21 +1,21 @@
 {
-  "generated_at": "2026-07-05T18:04:29.679119Z",
-  "total": 25,
+  "generated_at": "2026-07-06T12:03:48.534540Z",
+  "total": 28,
   "jobs": [
     {
-      "title": "Sole Engineer - 29m Private Sailing Yacht",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#sole-engineer-29m-private-sailing-yacht",
+      "title": "2nd Engineer - 70m+ Private Motor Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-70m-private-motor-yacht",
       "source": "Bluewater Yachting",
       "tags": [
-        "⚙️ Engineer"
+        "⚙️ Engineer",
+        "🔄 Rotation"
       ],
       "warnings": [
-        "⚠️ Rotación no mencionada",
         "⚠️ Fecha de inicio no especificada",
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-05T18:04:29.679119Z"
+      "seen_at": "2026-07-06T12:03:48.534540Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -30,12 +30,57 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-05T18:04:29.679119Z"
+      "seen_at": "2026-07-06T12:03:48.534540Z"
     },
     {
       "title": "Engineer Jobs",
       "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
       "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-06T12:03:48.534540Z"
+    },
+    {
+      "title": "👤 Electrical engineer (ETO) 📋 В СК требуется электромеханик. Тип судна Волго-Дон. Флаг РФ. Район плавания Каспий. Опыт р",
+      "url": "https://t.me/seamenjob/103196",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "06 Jul 2026",
+      "seen_at": "2026-07-06T12:03:48.534540Z"
+    },
+    {
+      "title": "👤 Chief Engineer 📋 Открыта вакансия СМХ на судно \"Ясный\". Судно в ремонте в Калининграде. Требования - опыт работы, рабо",
+      "url": "https://t.me/seamenjob/103203",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "06 Jul 2026",
+      "seen_at": "2026-07-06T12:03:48.534540Z"
+    },
+    {
+      "title": "Sole Engineer - 29m Private Sailing Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#sole-engineer-29m-private-sailing-yacht",
+      "source": "Bluewater Yachting",
       "tags": [
         "⚙️ Engineer"
       ],
