@@ -1,22 +1,7 @@
 {
-  "generated_at": "2026-07-06T18:57:30.232241Z",
+  "generated_at": "2026-07-07T10:54:04.165167Z",
   "total": 28,
   "jobs": [
-    {
-      "title": "2nd Engineer - 70m+ Private Motor Yacht",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-70m-private-motor-yacht",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation"
-      ],
-      "warnings": [
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-06T18:57:30.232241Z"
-    },
     {
       "title": "CHIEF ENGINEER",
       "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
@@ -30,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-06T18:57:30.232241Z"
+      "seen_at": "2026-07-07T10:54:04.165167Z"
     },
     {
       "title": "Engineer Jobs",
@@ -41,6 +26,21 @@
       ],
       "warnings": [
         "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-07T10:54:04.165167Z"
+    },
+    {
+      "title": "2nd Engineer - 70m+ Private Motor Yacht",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#2nd-engineer-70m-private-motor-yacht",
+      "source": "Bluewater Yachting",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation"
+      ],
+      "warnings": [
         "⚠️ Fecha de inicio no especificada",
         "⚠️ Salario no especificado"
       ],
