@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-07T10:54:04.165167Z",
-  "total": 28,
+  "generated_at": "2026-07-07T19:03:45.590063Z",
+  "total": 30,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,37 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-07T10:54:04.165167Z"
+      "seen_at": "2026-07-07T19:03:45.590063Z"
+    },
+    {
+      "title": "SECOND ENGINEER",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#second-engineer",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-07T19:03:45.590063Z"
+    },
+    {
+      "title": "Rotational 2nd Engineer 55m MY",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#rotational-2nd-engineer-55m-my",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation"
+      ],
+      "warnings": [
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-07T19:03:45.590063Z"
     },
     {
       "title": "Engineer Jobs",
@@ -30,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-07T10:54:04.165167Z"
+      "seen_at": "2026-07-07T19:03:45.590063Z"
     },
     {
       "title": "2nd Engineer - 70m+ Private Motor Yacht",
