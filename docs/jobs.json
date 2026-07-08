@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-08T10:15:17.935932Z",
-  "total": 30,
+  "generated_at": "2026-07-08T18:18:53.802044Z",
+  "total": 31,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-08T10:15:17.935932Z"
+      "seen_at": "2026-07-08T18:18:53.802044Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-08T10:15:17.935932Z"
+      "seen_at": "2026-07-08T18:18:53.802044Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-08T10:15:17.935932Z"
+      "seen_at": "2026-07-08T18:18:53.802044Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,21 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-08T10:15:17.935932Z"
+      "seen_at": "2026-07-08T18:18:53.802044Z"
+    },
+    {
+      "title": "Deckhand Engineer",
+      "url": "https://bespokecrew.com/jobs/deckhand-engineer/",
+      "source": "Bespoke Crew",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation",
+        "📅 Inicio ~2 meses",
+        "💶 ~7,000€/mes"
+      ],
+      "warnings": [],
+      "posted": "08 Jul 2026",
+      "seen_at": "2026-07-08T18:18:53.802044Z"
     },
     {
       "title": "2nd Engineer - 70m+ Private Motor Yacht",
