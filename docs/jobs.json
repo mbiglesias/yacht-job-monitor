@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-09T10:53:05.976327Z",
-  "total": 31,
+  "generated_at": "2026-07-09T18:51:17.590538Z",
+  "total": 33,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-09T10:53:05.976327Z"
+      "seen_at": "2026-07-09T18:51:17.590538Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-09T10:53:05.976327Z"
+      "seen_at": "2026-07-09T18:51:17.590538Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-09T10:53:05.976327Z"
+      "seen_at": "2026-07-09T18:51:17.590538Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,37 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-09T10:53:05.976327Z"
+      "seen_at": "2026-07-09T18:51:17.590538Z"
+    },
+    {
+      "title": "👤 2nd Engineer 📋 СРОЧНО на ЗС ГЕФИОН требуется 2-й механик, судно базируется в гор. Мурманск, после 20.07.2026 г. планир",
+      "url": "https://t.me/seamenjob/103307",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "09 Jul 2026",
+      "seen_at": "2026-07-09T18:51:17.590538Z"
+    },
+    {
+      "title": "👤 3rd Engineer 📋 На т/р Сириус требуется 3 механик Контракт 4+1 месяца. Заработная плата 3070 $ (в т.ч. отпускные, выпла",
+      "url": "https://t.me/seamenjob/103316",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "09 Jul 2026",
+      "seen_at": "2026-07-09T18:51:17.590538Z"
     },
     {
       "title": "Deckhand Engineer",
