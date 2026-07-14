@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-14T09:56:27.807357Z",
-  "total": 35,
+  "generated_at": "2026-07-14T18:04:39.673388Z",
+  "total": 33,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-14T09:56:27.807357Z"
+      "seen_at": "2026-07-14T18:04:39.673388Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-14T09:56:27.807357Z"
+      "seen_at": "2026-07-14T18:04:39.673388Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-14T09:56:27.807357Z"
+      "seen_at": "2026-07-14T18:04:39.673388Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-14T09:56:27.807357Z"
+      "seen_at": "2026-07-14T18:04:39.673388Z"
     },
     {
       "title": "Chief Engineer - 53m Private Sailing Yacht",
@@ -494,34 +494,6 @@
       ],
       "posted": null,
       "seen_at": "2026-06-17T19:25:44.252974Z"
-    },
-    {
-      "title": "Chief Engineer",
-      "url": "https://bespokecrew.com/jobs/chief-engineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses",
-        "💶 ~6,500€/mes"
-      ],
-      "warnings": [],
-      "posted": "10 Jun 2026",
-      "seen_at": "2026-06-14T10:48:56.027419Z"
-    },
-    {
-      "title": "2nd Engineer",
-      "url": "https://bespokecrew.com/jobs/2nd-engineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses",
-        "💶 ~6,500€/mes"
-      ],
-      "warnings": [],
-      "posted": "10 Jun 2026",
-      "seen_at": "2026-06-14T10:48:56.027419Z"
     }
   ]
 }
