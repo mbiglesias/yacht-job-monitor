@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-16T10:07:08.244428Z",
-  "total": 33,
+  "generated_at": "2026-07-16T18:07:59.591119Z",
+  "total": 34,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-16T10:07:08.244428Z"
+      "seen_at": "2026-07-16T18:07:59.591119Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-16T10:07:08.244428Z"
+      "seen_at": "2026-07-16T18:07:59.591119Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-16T10:07:08.244428Z"
+      "seen_at": "2026-07-16T18:07:59.591119Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,22 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-16T10:07:08.244428Z"
+      "seen_at": "2026-07-16T18:07:59.591119Z"
+    },
+    {
+      "title": "👤 4th Engineer 📋 На т/р Арктик Спирит требуется 4 механик Контракт 4+1 месяца. Заработная плата 2740 $ (в т.ч. отпускные",
+      "url": "https://t.me/seamenjob/103442",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "16 Jul 2026",
+      "seen_at": "2026-07-16T18:07:59.591119Z"
     },
     {
       "title": "Chief Engineer - 53m Private Sailing Yacht",
