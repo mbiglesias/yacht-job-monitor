@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-17T18:06:43.325479Z",
-  "total": 34,
+  "generated_at": "2026-07-18T09:23:03.525995Z",
+  "total": 32,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-17T18:06:43.325479Z"
+      "seen_at": "2026-07-18T09:23:03.525995Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-17T18:06:43.325479Z"
+      "seen_at": "2026-07-18T09:23:03.525995Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-17T18:06:43.325479Z"
+      "seen_at": "2026-07-18T09:23:03.525995Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-17T18:06:43.325479Z"
+      "seen_at": "2026-07-18T09:23:03.525995Z"
     },
     {
       "title": "👤 4th Engineer 📋 На т/р Арктик Спирит требуется 4 механик Контракт 4+1 месяца. Заработная плата 2740 $ (в т.ч. отпускные",
@@ -479,36 +479,6 @@
       "warnings": [],
       "posted": "18 Jun 2026",
       "seen_at": "2026-06-18T19:30:35.534700Z"
-    },
-    {
-      "title": "Chief or Second Engineer 3000 KW CoC",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-or-second-engineer-3000-kw-coc",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-17T19:25:44.252974Z"
-    },
-    {
-      "title": "5 years as C/E or 2nd Engineer",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#5-years-as-c-e-or-2nd-engineer",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-06-17T19:25:44.252974Z"
     }
   ]
 }
