@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-19T09:50:52.537135Z",
-  "total": 29,
+  "generated_at": "2026-07-19T17:58:00.173073Z",
+  "total": 28,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-19T09:50:52.537135Z"
+      "seen_at": "2026-07-19T17:58:00.173073Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-19T09:50:52.537135Z"
+      "seen_at": "2026-07-19T17:58:00.173073Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-19T09:50:52.537135Z"
+      "seen_at": "2026-07-19T17:58:00.173073Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-19T09:50:52.537135Z"
+      "seen_at": "2026-07-19T17:58:00.173073Z"
     },
     {
       "title": "👤 4th Engineer 📋 На т/р Арктик Спирит требуется 4 механик Контракт 4+1 месяца. Заработная плата 2740 $ (в т.ч. отпускные",
@@ -420,21 +420,6 @@
       ],
       "posted": "23 Jun 2026",
       "seen_at": "2026-06-23T19:09:34.655520Z"
-    },
-    {
-      "title": "👤 2nd Engineer to join Reefer vessel (9170 kW) 6700$ 📋 Дата посадки: 15.07.2026 Контракт: 4 +/- 1 months Зарплата: 6700 ",
-      "url": "https://t.me/seamenjob/102724",
-      "source": "Telegram: SeamenJob",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": "19 Jun 2026",
-      "seen_at": "2026-06-19T12:04:56.095648Z"
     }
   ]
 }
