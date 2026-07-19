@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-07-18T17:56:35.779684Z",
-  "total": 32,
+  "generated_at": "2026-07-19T09:50:52.537135Z",
+  "total": 29,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-18T17:56:35.779684Z"
+      "seen_at": "2026-07-19T09:50:52.537135Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-18T17:56:35.779684Z"
+      "seen_at": "2026-07-19T09:50:52.537135Z"
     },
     {
       "title": "Rotational 2nd Engineer 55m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-18T17:56:35.779684Z"
+      "seen_at": "2026-07-19T09:50:52.537135Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-07-18T17:56:35.779684Z"
+      "seen_at": "2026-07-19T09:50:52.537135Z"
     },
     {
       "title": "👤 4th Engineer 📋 На т/р Арктик Спирит требуется 4 механик Контракт 4+1 месяца. Заработная плата 2740 $ (в т.ч. отпускные",
@@ -435,50 +435,6 @@
       ],
       "posted": "19 Jun 2026",
       "seen_at": "2026-06-19T12:04:56.095648Z"
-    },
-    {
-      "title": "Tender Engineer",
-      "url": "https://bespokecrew.com/jobs/tenderengineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses"
-      ],
-      "warnings": [
-        "⚠️ Salario no especificado"
-      ],
-      "posted": "16 Jun 2026",
-      "seen_at": "2026-06-18T19:30:35.534700Z"
-    },
-    {
-      "title": "👤 Electrical engineer (ETO) 📋 В СК требуется электромеханик. Тип судна Волго-Дон. Флаг РФ. Район плавания Каспий. Опыт р",
-      "url": "https://t.me/seamenjob/102692",
-      "source": "Telegram: SeamenJob",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": "18 Jun 2026",
-      "seen_at": "2026-06-18T19:30:35.534700Z"
-    },
-    {
-      "title": "👤 Sole Engineer – ROTATION – 50 mtr SY We are URGENTLY searching for a Sole Engineer to join a 50 mtr sail yacht. Privat",
-      "url": "https://t.me/seamenjob/102703",
-      "source": "Telegram: SeamenJob",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses",
-        "💶 ~10,000€/mes"
-      ],
-      "warnings": [],
-      "posted": "18 Jun 2026",
-      "seen_at": "2026-06-18T19:30:35.534700Z"
     }
   ]
 }
