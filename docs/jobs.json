@@ -1,7 +1,82 @@
 {
-  "generated_at": "2026-07-30T18:16:50.005400Z",
+  "generated_at": "2026-07-31T10:36:53.021796Z",
   "total": 29,
   "jobs": [
+    {
+      "title": "CHIEF ENGINEER",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-31T10:36:53.021796Z"
+    },
+    {
+      "title": "SECOND ENGINEER",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#second-engineer",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-31T10:36:53.021796Z"
+    },
+    {
+      "title": "Chief Engineer 40m New Build",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-new-build",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation"
+      ],
+      "warnings": [
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-31T10:36:53.021796Z"
+    },
+    {
+      "title": "Chief Engineer 40m MY",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-my",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-31T10:36:53.021796Z"
+    },
+    {
+      "title": "Engineer Jobs",
+      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
+      "source": "My Crew Kit",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-07-31T10:36:53.021796Z"
+    },
     {
       "title": "Chief or Second Engineer 3000 KW CoC",
       "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#chief-or-second-engineer-3000-kw-coc",
@@ -21,81 +96,6 @@
       "title": "5 years as C/E or 2nd Engineer",
       "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#5-years-as-c-e-or-2nd-engineer",
       "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-30T18:16:50.005400Z"
-    },
-    {
-      "title": "CHIEF ENGINEER",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-30T18:16:50.005400Z"
-    },
-    {
-      "title": "SECOND ENGINEER",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#second-engineer",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-30T18:16:50.005400Z"
-    },
-    {
-      "title": "Chief Engineer 40m New Build",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-new-build",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation"
-      ],
-      "warnings": [
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-30T18:16:50.005400Z"
-    },
-    {
-      "title": "Chief Engineer 40m MY",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-my",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-07-30T18:16:50.005400Z"
-    },
-    {
-      "title": "Engineer Jobs",
-      "url": "https://mycrewkit.com/superyacht-jobs/?_keyword=engineer",
-      "source": "My Crew Kit",
       "tags": [
         "⚙️ Engineer"
       ],
