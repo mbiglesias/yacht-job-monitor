@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-03T18:51:51.331456Z",
+  "generated_at": "2026-08-04T10:36:49.003753Z",
   "total": 32,
   "jobs": [
     {
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "CHIEF ENGINEER",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "SECOND ENGINEER",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "Chief Engineer 40m MY",
@@ -75,7 +75,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "Engineer Jobs",
@@ -90,22 +90,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-03T18:51:51.331456Z"
-    },
-    {
-      "title": "Temporary Crossing Engineer",
-      "url": "https://bespokecrew.com/jobs/temporaryengineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses"
-      ],
-      "warnings": [
-        "⚠️ Salario no especificado"
-      ],
-      "posted": "03 Aug 2026",
-      "seen_at": "2026-08-03T18:51:51.331456Z"
+      "seen_at": "2026-08-04T10:36:49.003753Z"
     },
     {
       "title": "👤 2nd Engineer to join Ore carrier (25200 kW) 7500 EUR 📋 Дата посадки: 28.08.2026 Контракт: 4 +/- 1 months Зарплата: 750",
@@ -117,6 +102,21 @@
       "warnings": [
         "⚠️ Rotación no mencionada",
         "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "03 Aug 2026",
+      "seen_at": "2026-08-04T10:36:49.003753Z"
+    },
+    {
+      "title": "Temporary Crossing Engineer",
+      "url": "https://bespokecrew.com/jobs/temporaryengineer/",
+      "source": "Bespoke Crew",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation",
+        "📅 Inicio ~2 meses"
+      ],
+      "warnings": [
         "⚠️ Salario no especificado"
       ],
       "posted": "03 Aug 2026",
