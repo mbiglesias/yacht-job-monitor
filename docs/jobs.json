@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-07T08:58:18.039963Z",
+  "generated_at": "2026-08-07T17:51:11.620775Z",
   "total": 33,
   "jobs": [
     {
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T08:58:18.039963Z"
+      "seen_at": "2026-08-07T17:51:11.620775Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T08:58:18.039963Z"
+      "seen_at": "2026-08-07T17:51:11.620775Z"
     },
     {
       "title": "Chief Engineer 40m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T08:58:18.039963Z"
+      "seen_at": "2026-08-07T17:51:11.620775Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,22 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T08:58:18.039963Z"
+      "seen_at": "2026-08-07T17:51:11.620775Z"
+    },
+    {
+      "title": "Chief Engineer",
+      "url": "https://bespokecrew.com/jobs/chief-engineer/",
+      "source": "Bespoke Crew",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation",
+        "📅 Inicio ~2 meses"
+      ],
+      "warnings": [
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "04 Aug 2026",
+      "seen_at": "2026-08-07T17:51:11.620775Z"
     },
     {
       "title": "👤 2nd Engineer to join Reefer vessel (9170 kW) 6700$ 📋 Дата посадки: 05.10.2026 Контракт: 4 +/- 1 months Зарплата: 6700$",
@@ -120,21 +135,6 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-06T10:36:59.338948Z"
-    },
-    {
-      "title": "Chief Engineer",
-      "url": "https://bespokecrew.com/jobs/chief-engineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses"
-      ],
-      "warnings": [
-        "⚠️ Salario no especificado"
-      ],
-      "posted": "04 Aug 2026",
       "seen_at": "2026-08-06T10:36:59.338948Z"
     },
     {
