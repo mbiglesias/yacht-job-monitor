@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-07T17:51:11.620775Z",
-  "total": 33,
+  "generated_at": "2026-08-08T08:37:54.915022Z",
+  "total": 32,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T17:51:11.620775Z"
+      "seen_at": "2026-08-08T08:37:54.915022Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -30,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T17:51:11.620775Z"
+      "seen_at": "2026-08-08T08:37:54.915022Z"
     },
     {
       "title": "Chief Engineer 40m MY",
@@ -45,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T17:51:11.620775Z"
+      "seen_at": "2026-08-08T08:37:54.915022Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +60,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-07T17:51:11.620775Z"
+      "seen_at": "2026-08-08T08:37:54.915022Z"
     },
     {
       "title": "Chief Engineer",
@@ -480,20 +480,6 @@
       ],
       "posted": "09 Jul 2026",
       "seen_at": "2026-07-09T18:51:17.590538Z"
-    },
-    {
-      "title": "Deckhand Engineer",
-      "url": "https://bespokecrew.com/jobs/deckhand-engineer/",
-      "source": "Bespoke Crew",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation",
-        "📅 Inicio ~2 meses",
-        "💶 ~7,000€/mes"
-      ],
-      "warnings": [],
-      "posted": "08 Jul 2026",
-      "seen_at": "2026-07-08T18:18:53.802044Z"
     }
   ]
 }
