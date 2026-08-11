@@ -1,6 +1,6 @@
 {
-  "generated_at": "2026-08-11T08:52:50.643281Z",
-  "total": 32,
+  "generated_at": "2026-08-11T17:57:57.842726Z",
+  "total": 33,
   "jobs": [
     {
       "title": "CHIEF ENGINEER",
@@ -15,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-11T08:52:50.643281Z"
+      "seen_at": "2026-08-11T17:57:57.842726Z"
     },
     {
       "title": "Chief Engineer 40m New Build",
@@ -30,22 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-11T08:52:50.643281Z"
-    },
-    {
-      "title": "Chief Engineer 40m MY",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-my",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-08-11T08:52:50.643281Z"
+      "seen_at": "2026-08-11T17:57:57.842726Z"
     },
     {
       "title": "Engineer Jobs",
@@ -60,7 +45,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-11T08:52:50.643281Z"
+      "seen_at": "2026-08-11T17:57:57.842726Z"
     },
     {
       "title": "JobTemp 2nd Engineer80m+ Private Motor Yacht",
@@ -75,6 +60,36 @@
         "⚠️ Salario no especificado"
       ],
       "posted": "09 Aug 2026",
+      "seen_at": "2026-08-11T17:57:57.842726Z"
+    },
+    {
+      "title": "👤 ETO to join Car Carrier vessel (12957 EUR) 5780 EUR 📋 Дата посадки: 28.08.2026 Контракт: 4 +1 months Зарплата: 5780 € ",
+      "url": "https://t.me/seamenjob/104041",
+      "source": "Telegram: SeamenJob",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": "11 Aug 2026",
+      "seen_at": "2026-08-11T17:57:57.842726Z"
+    },
+    {
+      "title": "Chief Engineer 40m MY",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-my",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
       "seen_at": "2026-08-11T08:52:50.643281Z"
     },
     {
