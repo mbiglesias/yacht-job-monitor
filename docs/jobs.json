@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-12T09:09:50.207353Z",
+  "generated_at": "2026-08-12T17:57:30.284957Z",
   "total": 33,
   "jobs": [
     {
@@ -15,22 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-12T09:09:50.207353Z"
-    },
-    {
-      "title": "Chief Engineer 40m New Build",
-      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-new-build",
-      "source": "Saltwater Recruitment",
-      "tags": [
-        "⚙️ Engineer",
-        "🔄 Rotation"
-      ],
-      "warnings": [
-        "⚠️ Fecha de inicio no especificada",
-        "⚠️ Salario no especificado"
-      ],
-      "posted": null,
-      "seen_at": "2026-08-12T09:09:50.207353Z"
+      "seen_at": "2026-08-12T17:57:30.284957Z"
     },
     {
       "title": "Engineer Jobs",
@@ -45,7 +30,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-12T09:09:50.207353Z"
+      "seen_at": "2026-08-12T17:57:30.284957Z"
     },
     {
       "title": "JobTemp 2nd Engineer80m+ Private Motor Yacht",
@@ -60,6 +45,21 @@
         "⚠️ Salario no especificado"
       ],
       "posted": "09 Aug 2026",
+      "seen_at": "2026-08-12T17:57:30.284957Z"
+    },
+    {
+      "title": "Chief Engineer 40m New Build",
+      "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer-40m-new-build",
+      "source": "Saltwater Recruitment",
+      "tags": [
+        "⚙️ Engineer",
+        "🔄 Rotation"
+      ],
+      "warnings": [
+        "⚠️ Fecha de inicio no especificada",
+        "⚠️ Salario no especificado"
+      ],
+      "posted": null,
       "seen_at": "2026-08-12T09:09:50.207353Z"
     },
     {
