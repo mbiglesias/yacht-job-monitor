@@ -1,22 +1,7 @@
 {
-  "generated_at": "2026-08-17T08:40:33.840560Z",
+  "generated_at": "2026-08-17T17:27:54.432818Z",
   "total": 32,
   "jobs": [
-    {
-      "title": "Minimum SV second engineer",
-      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#minimum-sv-second-engineer",
-      "source": "Bluewater Yachting",
-      "tags": [
-        "⚙️ Engineer",
-        "💶 ~8,000€/mes"
-      ],
-      "warnings": [
-        "⚠️ Rotación no mencionada",
-        "⚠️ Fecha de inicio no especificada"
-      ],
-      "posted": null,
-      "seen_at": "2026-08-17T08:40:33.840560Z"
-    },
     {
       "title": "CHIEF ENGINEER",
       "url": "https://www.saltwaterrecruitment.com/jobs/?category=engineering#chief-engineer",
@@ -30,7 +15,7 @@
         "⚠️ Salario no especificado"
       ],
       "posted": null,
-      "seen_at": "2026-08-17T08:40:33.840560Z"
+      "seen_at": "2026-08-17T17:27:54.432818Z"
     },
     {
       "title": "Engineer Jobs",
@@ -43,6 +28,21 @@
         "⚠️ Rotación no mencionada",
         "⚠️ Fecha de inicio no especificada",
         "⚠️ Salario no especificado"
+      ],
+      "posted": null,
+      "seen_at": "2026-08-17T17:27:54.432818Z"
+    },
+    {
+      "title": "Minimum SV second engineer",
+      "url": "https://www.bluewateryachting.com/crew-placement/yacht-crew/jobs#minimum-sv-second-engineer",
+      "source": "Bluewater Yachting",
+      "tags": [
+        "⚙️ Engineer",
+        "💶 ~8,000€/mes"
+      ],
+      "warnings": [
+        "⚠️ Rotación no mencionada",
+        "⚠️ Fecha de inicio no especificada"
       ],
       "posted": null,
       "seen_at": "2026-08-17T08:40:33.840560Z"
